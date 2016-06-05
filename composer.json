@@ -9,6 +9,8 @@
         "laravel/framework": "5.2.*",
         "laravel/socialite": "^2.0",
         "guzzlehttp/guzzle": "^6.2",
+        "artesaos/seotools": "^0.8.2",
+        "mews/purifier": "^2.0",
         "facebook/php-sdk-v4": "^5.1",
         "webpatser/laravel-uuid": "2.*",
         "nesbot/carbon": "^1.21",

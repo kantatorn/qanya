@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
+use App\Topics;
+use App\Channel;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+
 class HomeController extends Controller
 {
     /**
@@ -14,7 +19,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('web');
     }
 
     /**
@@ -24,12 +29,21 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+
+        $topics = DB::table('topics')
+                ->join('channel','topics.channel','=','channel.id')
+                ->select('topics.*','channel.name as channel_name','channel.slug as channel_slug')
+                ->get();
+        $channels = Channel::all();
+
+        return view('welcome',compact('topics','channels'));
     }
 
-
-    public function create()
+    //Redirect to the previous page
+    public function previous()
     {
-        return view('pages.create');
+        return redirect()->back();
     }
+
+
 }

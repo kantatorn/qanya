@@ -2,46 +2,97 @@
 
 @section('content')
 
+
     <div layout="row" layout-align="center" class="layoutSingleColumn" >
         <div flex="100" flex-gt-xs="60">
             <md-tabs md-dynamic-height md-border-bottom>
+
+                {{-- If user login show customize feed--}}
+                @if(Auth::user())
+
+                <md-tab label="For you">
+                    <md-content>
+                        if user login - showe customized feed
+                    </md-content>
+                </md-tab>
+
+                @endif
+
+
                 <md-tab label="@{{ 'KEY_MSTVIEW_TDAY' | translate }}">
                     <md-content>
-                        @for($i=0;$i<30;$i++)
+
+                        @foreach($topics as $topic)
+
                             <md-card flex>
-{{--                                <md-card-header>
-                                    <md-card-avatar>
-                                        <img class="md-user-avatar" src="https://scontent.fbkk8-1.fna.fbcdn.net/v/t1.0-1/p50x50/3768_10156694116535179_601632126662207422_n.jpg?oh=7708542c0f407b5a75b6603915be6e20&oe=57E3EBCC"/>
-                                    </md-card-avatar>
-                                    <md-card-header-text>
-                                        <span class="md-title">Kantatorn Tardthong</span>
-                                        <span class="md-subhead">#ไปเที่ยว</span>
-                                    </md-card-header-text>
-                                    <span flex></span>
-                                    4w
-                                </md-card-header>--}}
+
                                 <md-card-title>
                                     <md-card-title-text>
-                                        <span class="md-title">
-                                            <a href="">
-                                                มีใครเคยกินอะไรตอนเด็กแล้วไม่ชอบจนตอนนี้ก็ไม่แตะมีไหมคะ
+                                        <span class="md-title" layout="row">
+                                            <a href="/question/{{$topic->uuid}}">
+                                                {{ strip_tags($topic->topic) }}
                                             </a>
+                                            <span flex=""></span>
+                                            <md-menu>
+                                                <md-button class="md-icon-button" aria-label="more"
+                                                           ng-click="ctrl.openMenu($mdOpenMenu, $event)">
+                                                    <md-icon md-svg-icon="/icons/ic_more_vert_black_24px.svg"></md-icon>
+                                                </md-button>
+                                                <md-menu-content width="4">
+                                                    <md-menu-item>
+                                                        <md-button ng-click="ctrl.redial($event)">
+                                                            <md-icon md-svg-icon="" md-menu-align-target></md-icon>
+                                                            Redial
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                </md-menu-content>
+                                            </md-menu>
                                         </span>
-                                        <span class="md-subhead">#test</span>
+                                        <span class="md-subhead">
+                                            @if($topic->tags != null)
+                                                @foreach(explode(",",$topic->tags) as $tag)
+                                                    <a href="/tag/{{$tag}}">
+                                                        #{{ $tag }}
+                                                    </a>
+                                                @endforeach
+                                            @endif
+
+                                            <a href="/channel/{{ $topic->channel_slug }}">
+                                                {{ $topic->channel_name }}
+                                            </a>
+
+                                            {!! \Carbon\Carbon::parse($topic->created_at)->diffForHumans() !!}
+
+                                            @{{ 'KEY_VIEW' | translate }}  {{ $topic->views }}
+
+                                            @{{ 'KEY_WNT_TO_KNOW' | translate }}  {{ $topic->follow }}
+                                        </span>
                                     </md-card-title-text>
                                 </md-card-title>
 
+                                {{-- IF anon is 0 then display user information --}}
+                                @if($topic->anon == 0)
                                 <md-card-header>
                                     <md-card-avatar>
                                         <img class="md-user-avatar" src="https://scontent.fbkk8-1.fna.fbcdn.net/v/t1.0-1/p50x50/3768_10156694116535179_601632126662207422_n.jpg?oh=7708542c0f407b5a75b6603915be6e20&oe=57E3EBCC"/>
                                     </md-card-avatar>
                                     <md-card-header-text>
                                         <span class="md-title">Kantatorn Tardthong</span>
-                                        <span class="md-subhead">#ไปเที่ยว</span>
+                                        <span class="md-subhead">
+                                              @foreach(explode(",",$topic->tags) as $tag)
+                                                <md-chip>
+                                                    <a href="/tag/{{$tag}}">
+                                                        {{ $tag }}
+                                                    </a>
+                                                </md-chip>
+                                            @endforeach
+                                        </span>
                                     </md-card-header-text>
                                     <span flex></span>
-                                    4w
+
                                 </md-card-header>
+                                @endif
+
                                 {{--<md-card-content>
                                     <p>
                                         The titles of Washed Out's breakthrough song and the first single from Paracosm share the
@@ -51,50 +102,34 @@
 
                                 <md-card-actions layout="row" layout-align="start center">
 
-                                    <md-button aria-label="Favorite">
+                                    <md-button aria-label="Favorite" class="md-icon-button">
                                         <md-icon md-svg-icon="/icons/ic_keyboard_arrow_up_black_24px.svg"></md-icon>
-                                        <span>100</span>
-                                    </md-button>
-
-
-                                    <md-button aria-label="Settings">
-                                        <md-icon md-svg-icon="/icons/ic_keyboard_arrow_down_black_24px.svg"></md-icon>
                                         <span>1</span>
                                     </md-button>
 
 
-                                    <md-button aria-label="Settings">
-                                        <md-icon md-svg-icon="/icons/ic_chat_bubble_outline_black_24px.svg"></md-icon>
-                                        <span>5</span>
+                                    <md-button aria-label="Settings" class="md-icon-button">
+                                        <md-icon md-svg-icon="/icons/ic_keyboard_arrow_down_black_24px.svg"></md-icon>
+                                        <span>1</span>
                                     </md-button>
-
 
                                     <span flex=""></span>
 
-                                    <md-button>@{{ 'KEY_WNT_TO_KNOW' | translate }} | 90</md-button>
+                                    <md-button>@{{ 'KEY_ANSWER' | translate }}  {{ $topic->answer }}</md-button>
+
+                                    <span flex=""></span>
+
+                                    <md-button>@{{ 'KEY_WNT_TO_KNOW' | translate }}  {{ $topic->follow }}</md-button>
 
                                     <span flex=""></span>
 
                                     <i class="fa fa-facebook-official" aria-hidden="true"></i>
-
-                                    <md-menu>
-                                        <md-button class="md-icon-button" aria-label="more"
-                                                   ng-click="ctrl.openMenu($mdOpenMenu, $event)">
-                                            <md-icon md-svg-icon="/icons/ic_more_vert_black_24px.svg"></md-icon>
-                                        </md-button>
-                                        <md-menu-content width="4">
-                                            <md-menu-item>
-                                                <md-button ng-click="ctrl.redial($event)">
-                                                    <md-icon md-svg-icon="" md-menu-align-target></md-icon>
-                                                    Redial
-                                                </md-button>
-                                            </md-menu-item>
-                                        </md-menu-content>
-                                    </md-menu>
                                 </md-card-actions>
                             </md-card>
-                        @endfor
+                        @endforeach
+
                     </md-content>
+
                 </md-tab>
                 <md-tab label="@{{ 'KEY_NO_ANSWER' | translate }}">
                     <md-content class="md-padding">
@@ -108,7 +143,12 @@
 
         </div>
         <div flex hide-xs="true">
-            เมืองที่เคยอยู่
+
+            @foreach($channels as $channel)
+                <md-button flex>{!! $channel->name !!}</md-button>
+            @endforeach
+
         </div>
+
     </div>
 @endsection

@@ -50,6 +50,7 @@ angular.module('App')
             'KEY_ADD_FIELD':  'Add field',
             'KEY_LOGIN_FB':   'Login with Facebook',
             'KEY_NO_ANSWER':  'No answer, yet',
+            'KEY_ANSWER':     'Answer',
 
             'KEY_HISTORY':    'History',
             'KEY_WRITE_REPLY':'Write a reply',
@@ -176,12 +177,16 @@ angular.module('App')
             'KEY_MSTVIEW_TDAY':'คำถามที่มีผู้ชมเยอะ',
             'KEY_WNT_TO_KNOW':'อยากรู้คำตอบ',
             'KEY_ADD_DETAILS':'เพิ่มรายละเอียด',
+            'KEY_ANON':       'ไม่ออกนาม',
+            'KEY_ANSWER':     'คำตอบ',
 
             'KEY_HISTORY':    'ประวัติการเข้าชม',
             'KEY_WRITE_REPLY':'เขียนตอบ',
             'KEY_LATEST_FEED':'ฟีดล่าสุด',
             'KEY_IN':         'ใน',
             'KEY_BY':         'โดย',
+            'KEY_ABT_AUTHOR': 'เกี่ยวกับคนเขียน',
+            'KEY_INTEREST_IN':'สนใจเกี่ยวกับ',
 
             //Remove topic
             'KEY_CONF_REMOVE':'คุณแน่ใจหรือว่าต้องการลบ?',
@@ -199,6 +204,7 @@ angular.module('App')
             'KEY_CAT_WILL_APPEAR':  'Follow some categories and it will appear here',
             'KEY_WHT_UR_STORY':     'What\'s your story',
             'KEY_WRT_COMMENT':      'เขียนความคิดเห็น',
+            'KEY_WRT_ANSWER':       'เขียนคำตอบ',
             'KEY_FORGOT_PWD':       'ลืมรหัสผ่าน?',
             'KEY_UPLOAD_PHOTO':     'เปลี่ยนรูป',
             'KEY_TAGS_FOLLOW':      'แท็กที่คุณกำลังติดตาม',

@@ -32,6 +32,12 @@ body {
     max-width: 900px;
     margin: 0 auto;
 }
+
+.layoutSingleColumn_compact{
+    max-width: 900px;
+    margin: 0 auto;
+}
+
 .reading{
     font-weight: 400;
     font-style: normal;
