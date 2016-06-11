@@ -32,46 +32,53 @@
                     {{  strip_tags ($topic->topic) }}
                 </h1>
 
+                {{-- STATIC CONTENT --}}
                 <div layout="row" layout-align="start center">
 
-                    @{{ 'KEY_VIEW' | translate }}
+                    <span flex>
+                        @{{ 'KEY_VIEW' | translate }}
+                        {{ $topic->views }}
+                    </span>
 
-                    {{ $topic->views }}
+                    <span flex ng-init="questionCtrl.getUpvoteCount({{ $topic->upvote }})">
+                        @{{ 'KEY_UPVOTE' | translate }}
+                        @{{ questionCtrl.upvoteCount }}
+                    </span>
 
-                    {{-- Want to know the answer--}}
-                    @if(Auth::user())
-                        <md-button class="md-primary" aria-label=" @{{ 'KEY_WNT_TO_KNOW' | translate }}"
-                                   ng-click="questionCtrl.followQuestion('{{$topic->uuid}}')">
-                    @else
-                        <md-button class="md-primary" aria-label="More" ng-href="/login">
-                    @endif
-                            <span>@{{ questionCtrl.followStatus }}</span>
-                            @{{ 'KEY_WNT_TO_KNOW' | translate }} {{ $topic->follow }}
-                        </md-button>
+                    {{-- Downvote --}}
+                    <span flex ng-init="questionCtrl.getDownvoteCount({{ $topic->downvote }})">
+                        @{{ 'KEY_DWN_VOTE' | translate }}
+                        @{{ questionCtrl.downvoteCount }}
+                    </span>
 
-                    <md-button class="md-icon-button">
-                        <md-icon md-svg-icon="/icons/ic_create_black_24px.svg"></md-icon>
-                        <span>
-                            @{{ 'KEY_UPVOTE' | translate }}
-                        </span>
-                    </md-button>
-                    <md-button>@{{ 'KEY_DWN_VOTE' | translate }}</md-button>
+                    {{-- Following--}}
+                    <span flex>@{{ 'KEY_FOLLOWING' | translate }} {{ $topic->follow }}</span>
+
                 </div>
+                {{-- END STATIC CONTENT --}}
+
             </div>
 
 
             <div layout-align="start" class="md-padding">
 
                 <h1 class="md-headline">
-                    คุณตอบคำถามนี้ได้ไหม?
+                    @{{ 'KEY_CAN_YOU_ANSWER' | translate }}
                 </h1>
                 มีคน {{ $topic->follow }} คนรอคำตอบอยู่
 
 
                 @if(Auth::user())
-                <md-button class="md-primary" aria-label="More" ng-click="questionCtrl.answerForm = true">
-                    <md-icon md-svg-icon="/icons/ic_create_black_24px.svg"></md-icon>
+                <md-button aria-label="@{{ 'KEY_REPLY' | translate }}"
+                           ng-click="questionCtrl.answerForm = true">
+
+                    <md-icon>
+                        <i class="material-icons md-inactive">create</i>
+                    </md-icon>
+
                     @{{ 'KEY_REPLY' | translate }}
+
+
                 </md-button>
                 @else
                     <md-button class="md-primary" aria-label="More" ng-href="/login">
@@ -79,15 +86,94 @@
                     </md-button>
                 @endif
 
-{{--
-                <md-button class="md-accent">
-                    @{{ 'KEY_REPLY' | translate }}
-                </md-button>
---}}
-
             </div>
 
 
+            {{-- ACTIONABLE BUTTONS--}}
+            <div>
+
+                {{-- Following the answer--}}
+                @if(Auth::user())
+                    <md-button ng-init="questionCtrl.getFollowStatus('{{ $topic->uuid }}')"
+                               aria-label=" @{{ 'KEY_WNT_TO_KNOW' | translate }}"
+                               ng-click="questionCtrl.followQuestion('{{ $topic->uuid }}')">
+                @else
+                    <md-button class="md-primary" aria-label="More" ng-href="/login">
+                @endif
+                        <span ng-if="questionCtrl.followStatusText" class="green-font">
+                            <md-icon class="green-font">
+                                <i class="material-icons">grade</i>
+                            </md-icon>
+                            @{{ 'KEY_FOLLOWING' | translate  }}
+                        </span>
+
+                        <span ng-if="!questionCtrl.followStatusText">
+                            <md-icon>
+                                <i class="material-icons md-inactive">grade</i>
+                            </md-icon>
+                            @{{ 'KEY_WNT_TO_KNOW' | translate  }}
+                        </span>
+
+                    </md-button>
+
+
+                {{-- Up vote --}}
+                @if(Auth::user())
+                    <md-button ng-click="questionCtrl.questionUpvote('{{ $topic->uuid }}')"
+                               ng-init="questionCtrl.upvoteStatus('{{ $topic->uuid }}')">
+                @else
+
+                    <md-button class="md-primary" aria-label="More" ng-href="/login">
+
+                @endif
+
+                        <span ng-if="questionCtrl.upvoteStatusText" class="green-font md-padding">
+                             <md-icon class="green-font">
+                                 <i class="material-icons">thumb_up</i>
+                             </md-icon>
+                            @{{ 'KEY_UPVOTED' | translate  }}
+                        </span>
+
+                        <span ng-if="!questionCtrl.upvoteStatusText">
+                            <md-icon>
+                                <i class="material-icons md-inactive">thumb_up</i>
+                            </md-icon>
+                            @{{ 'KEY_UPVOTE' | translate  }}
+                        </span>
+                    </md-button>
+
+
+                {{-- Down vote--}}
+                @if(Auth::user())
+                    <md-button  ng-click="questionCtrl.questionDownvote('{{ $topic->uuid }}')"
+                                ng-init="questionCtrl.downvoteStatus('{{ $topic->uuid }}')"
+                                class="md-inactive">
+                @else
+
+                    <md-button class="md-primary" aria-label="More" ng-href="/login">
+
+                @endif
+
+                        <span ng-if="questionCtrl.downvoteStatusText" class="green-font md-padding">
+                            <md-icon class="green-font">
+                                <i class="material-icons">thumb_down</i>
+                            </md-icon>
+                            @{{ 'KEY_DWN_VOTED' | translate  }}
+                        </span>
+
+                        <span ng-if="!questionCtrl.downvoteStatusText">
+                              <md-icon>
+                                  <i class="material-icons md-inactive">thumb_down</i>
+                              </md-icon>
+                            @{{ 'KEY_DWN_VOTE' | translate  }}
+                        </span>
+                    </md-button>
+
+
+            </div>
+            {{-- END ACTIONABLE BUTTONS --}}
+
+            {{-- ANSWER FORM--}}
             @if(Auth::user())
 
                     <md-card class="md-padding" ng-show="questionCtrl.answerForm" ng-init="questionCtrl.answerForm = false">
@@ -174,7 +260,11 @@
                         <img ng-src="https://scontent.fbkk8-1.fna.fbcdn.net/v/t1.0-1/p160x160/3768_10156694116535179_601632126662207422_n.jpg?oh=6da6cc0c3a2381aa4cff9a7a8e246547&oe=57C31D82" class="md-avatar" alt="user" />
                         <div class="md-list-item-text">
 
-                            <h3>{{ $answer->firstname }} {{ $answer->lastname }}</h3>
+                            <h3>
+                                <a href="/profile/{{ $answer->displayname }}">
+                                    {{ $answer->firstname }} {{ $answer->lastname }}
+                                </a>
+                            </h3>
 
                             <p>test</p>
 
@@ -188,9 +278,16 @@
                                 {!! \Carbon\Carbon::parse($answer->created_at)->diffForHumans() !!}
                             </p>
 
-                            <div layout="row">
-                                <md-button class="md-primary md-raised">
-                                    เห็นด้วย | 10
+                            <div layout="row" ng-controller="AnswerCtrl as answerCtrl">
+
+                                @if(Auth::user())
+                                    <md-button class="md-primary"
+                                               ng-init="answerCtrl.getAnswerStatus({{ $answer->uuid }},$index)"
+                                               ng-click="answerCtrl.upvote({{ $answer->uuid }})">
+                                @else
+                                    <md-button ng-ref="/login">
+                                @endif
+                                    เห็นด้วย @{{ answerCtrl.upvoteStatusText[$index] }}
                                 </md-button>
                                 <md-button class="md-primary">
                                   โหวดลง
@@ -200,6 +297,7 @@
                                 </md-button>
                                 <span flex></span>
                             </div>
+
                         </div>
                     </md-list-item>
                 @endforeach
@@ -230,6 +328,8 @@
                 <i class="fa fa-trophy" aria-hidden="true"></i>
             </md-content>
 
+
+            <h4>Trend</h4>
         </div>
 
     </div>

@@ -23,6 +23,12 @@ class CreateTopicsAnswerComment extends Migration
             $table->integer('downvote')->default(0);
             $table->timestamps();
         });
+
+
+        #MODIFY TABLES
+        Schema::table('tags', function ($table) {
+            $table->integer('channel_id')->index();
+        });
     }
 
     /**

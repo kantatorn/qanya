@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Answers;
+use App\Question;
 use Illuminate\Http\Request;
 
 use Carbon\Carbon;
@@ -40,8 +41,9 @@ class QuestionController extends Controller
         return redirect()->action('HomeController@index');
     }
 
+
     /**
-     * Show the form for creating a new resource.
+     * CREATE NEW QUESTION TOPIC
      *
      * @return \Illuminate\Http\Response
      */
@@ -54,10 +56,12 @@ class QuestionController extends Controller
 
             return view('pages.create',compact('channels'));
         }
-        else{
+        else
+        {
             return redirect()->action('HomeController@index');
         }
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -103,8 +107,9 @@ class QuestionController extends Controller
             foreach($request->tags as $tag)
             {
                 //Master link of tags
-                $tag_data[$count] = array(  'topic_uuid'=>$topicUUID,
-                                            'title'=>clean($tag),
+                $tag_data[$count] = array(  'topic_uuid'=> $topicUUID,
+                                            'title'     => clean($tag),
+                                            'channel_id'=> $request->channel,
                                             'created_at'=> date("Y-m-d H:i:s")
                                          );
                 $count++;
@@ -214,21 +219,17 @@ class QuestionController extends Controller
     /**
      * Follow question
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      */
     public function follow(Request $request)
     {
         $db_table = DB::table('topics_follow');
 
-        //checking if the data exist along with the active flag
-        $is_following = $db_table
-                        ->where('uuid',Auth::user()->uuid)
-                        ->where('topic_id',$request->topic)
-                        ->where('flg',1)
-                        ->count();
+        $question = new Question();
+        $is_following = $question->followingStatus(Auth::user()->uuid,$request->topic);
 
         //If user is not following this question
-        if($is_following == 0){
+        if(!$is_following){
             $db_table->insert([
                                 'uuid'      => Auth::user()->uuid,
                                 'topic_id'    => $request->topic,
@@ -238,7 +239,7 @@ class QuestionController extends Controller
             DB::table('topics')->where('uuid',$request->topic)
                                ->increment('follow');
 
-            $is_following = 1;
+            $is_following =1;
         }else{
             $db_table
                 ->where('uuid',Auth::user()->uuid)
@@ -252,21 +253,192 @@ class QuestionController extends Controller
             $is_following = 0;
         }
 
-        //Count the total followers
-        $follow_count = $db_table->where('topic_id',$request->topic)->count();
-
-
-
-        return response()->json(['following' => $is_following,'follow_count' => $follow_count]);
+        return $is_following;
     }
 
 
     /**
-     * Upvote question
+     * Follow status
+     *
+     * @param  \Illuminate\Http\Request  $request
      */
-    public function upvote()
+    public function followStatus(Request $request)
+    {
+        if(Auth::user()) {
+            $question = new Question();
+            $is_following = $question->followingStatus(Auth::user()->uuid, $request->topic);
+            if ($is_following) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }else{
+            abort(403);
+        }
+    }
+
+
+    /**
+     * Up vote question
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return int
+     */
+    public function upvote(Request $request)
     {
 
+        if(Auth::user())
+        {
+            $question = new Question();
+            $is_voted = $question->upvoteStatus(Auth::user()->uuid,$request->topic);
+
+            //if already voted for this question
+            if($is_voted)
+            {
+
+                $this->resetVote($request,'upvote');
+
+                return 0;
+            }
+            else
+            {
+
+                $is_downvoted = $question->downvoteStatus(Auth::user()->uuid,$request->topic);
+
+                if($is_downvoted)
+                    $this->resetVote($request,'downvote');
+
+                $this->incrementVote($request,'upvote',1);
+
+                return 1;
+            }
+
+        }
+        else{
+            abort(403);
+        }
+    }
+
+
+    /**
+     * Reset all the stated $vote
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string $vote
+     */
+    public function resetVote(Request $request,$vote)
+    {
+        //decrement the upvote
+        DB::table('topics')->where('uuid' , $request->topic)->decrement("$vote");
+
+        //remove user vote stat
+        DB::table('user_vote')->where('user_uuid' , Auth::user()->uuid)
+            ->where('topic_uuid' , $request->topic)
+            ->delete();
+    }
+
+
+    /**
+     * Increment vote stat
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string   $vote
+     * @param  int      $activity (0 or 1)
+     */
+    public function incrementVote(Request $request, $vote, $activity)
+    {
+        //increment the upvote
+        DB::table('topics')->where('uuid' , $request->topic)->increment("$vote");
+
+        //add new user vote stat
+        DB::table('user_vote')->insert(
+            [   'user_uuid'     =>  Auth::user()->uuid,
+                'topic_uuid'    =>  $request->topic,
+                'activity'      =>  $activity
+            ]);
+    }
+
+
+    /**
+     * Down vote question
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return int
+     */
+    public function downvote(Request $request)
+    {
+
+        if(Auth::user())
+        {
+            $question = new Question();
+            $is_voted = $question->downvoteStatus(Auth::user()->uuid,$request->topic);
+
+            //if already down vote for this question
+            if($is_voted)
+            {
+
+                $this->resetVote($request,'downvote');
+
+                return 0;
+            }
+            else
+            {
+
+                $is_upvoted = $question->upvoteStatus(Auth::user()->uuid,$request->topic);
+
+                if($is_upvoted)
+                    $this->resetVote($request,'upvote');
+
+                $this->incrementVote($request,'downvote',0);
+
+                return 1;
+            }
+
+        }
+        else{
+            abort(403);
+        }
+    }
+
+
+    /**
+     * Up vote status
+     * @param  \Illuminate\Http\Request  $request
+     */
+    public function upvoteStatus(Request $request)
+    {
+        if(Auth::user()) {
+            $question = new Question();
+            $is_voted = $question->upvoteStatus(Auth::user()->uuid, $request->topic);
+
+
+            if ($is_voted) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+
+    /**
+     * Down vote status
+     * @param  \Illuminate\Http\Request  $request
+     */
+    public function downvoteStatus(Request $request)
+    {
+        if(Auth::user()) {
+            $question = new Question();
+            $is_voted = $question->downvoteStatus(Auth::user()->uuid, $request->topic);
+
+            if ($is_voted) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
     }
 
 }

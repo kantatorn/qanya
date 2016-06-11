@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Tags;
 use Illuminate\Http\Request;
 
 use App\Topics;
@@ -34,15 +35,20 @@ class HomeController extends Controller
                 ->join('channel','topics.channel','=','channel.id')
                 ->select('topics.*','channel.name as channel_name','channel.slug as channel_slug')
                 ->get();
+
+
         $channels = Channel::all();
 
-        return view('welcome',compact('topics','channels'));
+        $tags = new Tags();
+        $trendingTags = $tags->trending();
+
+        return view('welcome',compact('topics','channels'))->with('trendingTags',$trendingTags);
     }
 
     //Redirect to the previous page
     public function previous()
     {
-        return redirect()->back();
+        return redirect()->intended();
     }
 
 

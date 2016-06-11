@@ -15,8 +15,8 @@ return [
     */
 
     'mailgun' => [
-        'domain' => env('sandboxfe3a7fc8e5194b1ea45130424aa5b244.mailgun.org'),
-        'secret' => env('key-33240f50add35c8f5bb2444cc74ef0dd'),
+        'domain' => env('MAILGUN_DOMAIN'),
+        'secret' => env('MAILGUN_SECRET')
     ],
 
     'ses' => [
@@ -40,7 +40,7 @@ return [
         'client_secret' => 'ec0d7c8ff8724b2c17d5dfc7a5e8e33e',
         'scopes'        => ['email', 'user_birthday','user_about_me','user_education_history',
                             'user_location','user_work_history','user_hometown','user_likes'],
-        'redirect'      => 'http://qanya.local:8000/auth/facebook/callback',
+        'redirect'      => 'http://qanya.local:8888/auth/facebook/callback',
     ],
 
 ];

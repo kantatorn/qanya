@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Answers;
 use App\AnswersComment;
+use App\Events\NewAnswer;
 use App\Experts;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 
 class AnswerController extends Controller
@@ -53,12 +56,11 @@ class AnswerController extends Controller
             $answer->topic_uuid = $request->topic;
             $answer->body       = clean($request->text);
 
+            $lastID = $answer;
+
             if($answer->save())
             {
-                Mail::send('emails.reminder', ['user' => 'kantatorn.tardthong@gmail.com'], function ($m) {
-                    $m->from('hello@app.com', 'Your Application');
-                    $m->to('kantatorn.tardthong@gmail.com', 'kantatorn tardthong')->subject('Your Reminder!');
-                });
+                Event::fire(new NewAnswer($lastID));
             }
 
         }else{
@@ -160,4 +162,109 @@ class AnswerController extends Controller
             abort(403);
         }
     }
+
+    /**
+     * Up vote Answer
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return int
+     */
+    public function upvote(Request $request)
+    {
+
+        if(Auth::user())
+        {
+            $answer = new Answers();
+            $is_voted = $answer->upvoteStatus(Auth::user()->uuid,$request->answer);
+
+            //if already voted for this question
+            if($is_voted)
+            {
+
+                //remove user vote stat
+                DB::table('user_vote')->where('user_uuid' , Auth::user()->uuid)
+                    ->where('topic_uuid' , $request->answer)
+                    ->delete();
+
+                return 0;
+            }
+            else
+            {
+
+                $is_downvoted = $answer->downvoteStatus(Auth::user()->uuid,$request->answer);
+
+                if($is_downvoted)
+                    $this->resetVote($request,'downvote');
+
+                $this->incrementVote($request,'upvote',3);
+
+                return 1;
+            }
+
+        }
+        else{
+            abort(403);
+        }
+    }
+
+
+    /**
+     * Up vote status
+     * @param  \Illuminate\Http\Request  $request
+     */
+    public function upvoteStatus(Request $request)
+    {
+        if(Auth::user()) {
+            $answer = new Answers();
+            $is_voted = $answer->upvoteStatus(Auth::user()->uuid, $request->answer);
+
+            if ($is_voted) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+
+    /**
+     * Reset all the stated $vote
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string $vote
+     */
+    public function resetVote(Request $request,$vote)
+    {
+        //decrement the upvote
+        DB::table('topics_answers')->where('uuid' , $request->answer)->decrement("$vote");
+
+        //remove user vote stat
+        DB::table('user_vote')->where('user_uuid' , Auth::user()->uuid)
+            ->where('topic_uuid' , $request->answer)
+            ->delete();
+    }
+
+    /**
+     * Increment vote stat
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string   $vote
+     * @param  int      $activity (3 upvoteAns or 4 downvoteAns)
+     */
+    public function incrementVote(Request $request, $vote, $activity)
+    {
+        //increment the upvote
+        DB::table('topics_answers')->where('uuid' , $request->answer)->increment("$vote");
+
+        //add new user vote stat
+        DB::table('user_vote')->insert(
+            [   'user_uuid'     =>  Auth::user()->uuid,
+                'topic_uuid'    =>  $request->answer,
+                'activity'      =>  $activity
+            ]);
+    }
+
+
+
 }

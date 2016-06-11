@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/css/tether.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="/css/all.css" rel="stylesheet">
 
     @if ( Config::get('app.debug') )
@@ -32,9 +33,10 @@
 </head>
 <body id="app-layout" ng-app="App" layout='row'>
 
-<div layout="column" flex ng-controller="AppCtrl" ng-cloak="">
+<div layout="column" flex ng-controller="AppCtrl" ng-cloak>
 
-    <md-toolbar style="box-shadow: 1px 2px 8px rgba(0, 0, 0, .5); background: white; color: #666">
+    <md-toolbar style="box-shadow: 1px 2px 8px rgba(0, 0, 0, .5);
+                background: white;">
 
         <div class="md-toolbar-tools">
 
@@ -46,52 +48,68 @@
                 <md-icon md-svg-icon="/icons/ic_menu_black_24px.svg"></md-icon>
             </md-button>
 
-            <h2>
-                <a href="/">
-                    <span>Qanya</span>
-                </a>
-            </h2>
+
+            <a href="/" class="md-title purple-font">
+                <span>Qanya</span>
+            </a>
+
 
             <span flex></span>
 
             {{-- Channels --}}
-            <md-button class="md-hue-1"
+            <md-button
                        hide-xs
-                       aria-label="@{{ 'KEY_DASHBOARD' | translate }}">
-                <md-icon md-svg-icon="/icons/ic_apps_black_24px.svg"></md-icon>
-                @{{ 'KEY_DASHBOARD' | translate }}
+                       aria-label="@{{ 'KEY_DASHBOARD' | translate }}"
+                       ng-click="toggleRight()">
+                <span class="purple-font">
+                    <md-icon>
+                        <i class="material-icons purple-font">apps</i>
+                    </md-icon>
+                    @{{ 'KEY_DASHBOARD' | translate }}
+                </span>
             </md-button>
 
             @if(Auth::user())
 
                 {{-- Ask question --}}
-                <md-button class="md-hue-1"
+                <md-button
                         hide-xs
                         aria-label="@{{ 'KEY_QUESTION' | translate }}"
                         href="/question/create">
-                    <md-icon md-svg-icon="/icons/ic_create_black_24px.svg"></md-icon>
+                    <span class="purple-font">
+                        <md-icon>
+                            <i class="material-icons purple-font">create</i>
+                        </md-icon>
+                    </span>
                     @{{ 'KEY_QUESTION' | translate }}
                 </md-button>
 
                 <md-button
-                        class="md-hue-1"
                         hide-xs
                         aria-label="{!! Auth::user()->displayname !!}"
                         href="/profile/{{ Auth::user()->displayname }}">
+                    <span class="purple-font">
                         {!! Auth::user()->firstname !!}
+                    </span>
                     <img ng-src="{!! Auth::user()->avatar !!}" class="img-circle" width="27px">
                 </md-button>
 
             @else
                 {{-- Login button --}}
-                <md-button class="md-hue-1" aria-label="Person"
+                <md-button aria-label="Person"
                            ng-href="{{ url('/login') }}"
                            hide-xs>
-                    <md-icon md-svg-icon="/icons/ic_account_circle_black_24px.svg"></md-icon>
-                    @{{ 'KEY_LOGIN_REGISTER' | translate }}
+                    <span class="purple-font">
+                        <md-icon>
+                            <i class="material-icons purple-font">account_circle</i>
+                        </md-icon>
+                        @{{ 'KEY_LOGIN_REGISTER' | translate }}
+                    </span>
+
                     <md-tooltip md-direction="left">
                         @{{ 'KEY_LOGIN_REGISTER' | translate }}
                     </md-tooltip>
+
                 </md-button>
 
             @endif
@@ -104,6 +122,12 @@
     <md-content layout-align="center">
         @yield('content')
     </md-content>
+
+    <md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
+        <md-content layout-padding layout="column" layout-align="start">
+            test
+        </md-content>
+    </md-sidenav>
 
     {{-- Sidebar for mobile --}}
     <md-sidenav class="md-sidenav-left md-whiteframe-4dp" md-component-id="left">

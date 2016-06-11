@@ -12,6 +12,43 @@ class Answers extends Model
     protected $table = 'topics_answers';
 
 
+
+    /**
+     * Get User up vote status
+     *
+     * @param
+     * @return int
+     **/
+    public function upvoteStatus($user_id,$topic_id)
+    {
+        $is_voted = DB::table('user_vote')
+            ->where('user_uuid', $user_id)
+            ->where('topic_uuid',$topic_id)
+            ->where(['activity' => 3])
+            ->first();
+
+        return $is_voted;
+    }
+
+
+    /**
+     * Get User down vote status
+     *
+     * @param
+     * @return int
+     **/
+    public function downvoteStatus($user_id,$topic_id)
+    {
+        $is_voted = DB::table('user_vote')
+            ->where('user_uuid', $user_id)
+            ->where('topic_uuid',$topic_id)
+            ->where(['activity' => 4])
+            ->first();
+
+        return $is_voted;
+    }
+
+
     /**
      * Incrementing views for answer
      *

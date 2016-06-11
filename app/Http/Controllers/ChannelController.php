@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Tags;
+use App\Channel;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use Illuminate\Support\Facades\DB;
 
-class TagsController extends Controller
+class ChannelController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +16,7 @@ class TagsController extends Controller
      */
     public function index()
     {
-        return redirect()->action('HomeController@index');
+        //
     }
 
     /**
@@ -49,21 +48,24 @@ class TagsController extends Controller
      */
     public function show($id)
     {
-        $tags = new Tags();
+        $channelInfo = Channel::where('slug', $id)->first();
 
-        $topics = $tags->topics($id);
-        $trendingTags = $tags->trending();
-
-        if(empty($topics))
+        if($channelInfo)
         {
-            abort(404);
+            $channel = new Channel();
+            $topics = $channel->topics($channelInfo->id);
+            $tagsTrending = $channel->tagsTrending($channelInfo->id);
+            $noAnswers = $channel->noAnswers($channelInfo->id);
+
+            return view('pages.channel')
+                ->with('channelInfo', $channelInfo)
+                ->with('tagsTrending', $tagsTrending)
+                ->with('topics', $topics)
+                ->with('noAnswers', $noAnswers);
         }
         else
         {
-            return view('pages.tag')
-                ->with('topics',$topics)
-                ->with('tag',$id)
-                ->with('trendingTags',$trendingTags);
+            abort(404);
         }
     }
 

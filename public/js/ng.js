@@ -25,6 +25,7 @@ var app = angular.module('App', ['ngMaterial','ngMessages','ngCookies',
         'contrastLightColors': 'dark' // could also specify this if default was 'dark'
     })
     $mdThemingProvider.theme('default')
-        .primaryPalette('grey')
-        .accentPalette('slack');
+        .primaryPalette('slack')
+        .accentPalette('blue-grey')
+        .warnPalette('orange');
 }])

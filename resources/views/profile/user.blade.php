@@ -15,7 +15,7 @@
 
                 {{-- Add what you know / interested --}}
                 <div class="md-block" flex layout="solumn" ng-controller="UserCtrl as userCtrl">
-                    <form ng-submit="userCtrl.addExpertise()">
+                    <form ng-submit="userCtrl.addExpertise('{{ Auth::user()->uuid }}')">
                         <md-input-container class="md-block">
                             <label>Name</label>
                             <input ng-model="userCtrl.expertise" type="text" autocomplete="off">
@@ -155,13 +155,15 @@
                 @{{ 'KEY_INTEREST_IN' | translate }}
 
                 <md-content  ng-controller="UserCtrl as userCtrl">
-                    <md-list flex>
-                        @foreach($user_expertise as $expertise)
-                            <md-list-item>
+                    <md-list flex ng-init="userCtrl.expertiseList('{{Auth::user()->uuid}}')">
+                        {{--@foreach($user_expertise as $expertise)--}}
+                            <md-list-item ng-repeat="expertise in userCtrl.expertiseArray">
                                 <div class="md-list-item-text" layout="column">
-                                    <a href="/tag/{{ strip_tags($expertise->slug) }}">
-                                        {{ strip_tags( $expertise->title) }}
-                                    </a>
+                                    @{{ expertise.title | htmlToPlaintext}}
+                                    @{{ expertise.slug  | htmlToPlaintext}}
+                                    {{--<a href="/tag/{{ strip_tags($expertise->slug) }}">--}}
+                                        {{--{{ strip_tags( $expertise->title) }}--}}
+                                    {{--</a>--}}
                                     <div class="md-secondary">
                                         <md-button class="md-raised" ng-click="showActionToast()">
                                             X
@@ -169,7 +171,7 @@
                                     </div>
                                 </div>
                             </md-list-item>
-                        @endforeach
+                        {{--@endforeach--}}
                     </md-list>
                 </md-content>
             </div>

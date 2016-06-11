@@ -37,7 +37,7 @@ class UsersController extends Controller
     }
 
     /**
-     *
+     * Create displayname
      */
     public function create_displayname()
     {
@@ -45,7 +45,7 @@ class UsersController extends Controller
     }
 
     /**
-     * Create displayname
+     * Create user?
      *
      * @return \Illuminate\Http\Response
      */
@@ -73,26 +73,21 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        $user = DB::table('users')->where('displayname',$id)->first();
+        $userInfo = DB::table('users')->where('displayname',$id)->first();
 
         //If there is user
-        if($user) {
-            $user_questions = DB::table('topics')->where('uid', $user->uuid)
-                             ->join('channel', 'topics.channel', '=', 'channel.id')
-                             ->select('topics.*', 'channel.name as channel_name', 'channel.slug as channel_slug')
-                             ->get();
+        if($userInfo) {
 
-            $user_expertise = DB::table('experts')->where('user_uuid',$user->uuid)->get();
+            $user = new User();
 
-            $user_answers   = DB::table('topics_answers')->where('user_uuid',$user->uuid)
-                                ->join('topics','topics_answers.topic_uuid','=','topics.uuid')
-                                ->select('topics_answers.*','topics.topic')
-                                ->get();
+            $user_questions = $user->postedQuestions($userInfo->uuid);
+//            $user_expertise = $user->userExpertise($userInfo->uuid);
+            $user_answers   = $user->postedAnswer($userInfo->uuid);
 
-            return view('profile.user')->with('user', $user)
+            return view('profile.user')->with('user', $userInfo)
                                        ->with('user_questions', $user_questions)
-                                       ->with('user_answers', $user_answers)
-                                       ->with('user_expertise', $user_expertise);
+                                       ->with('user_answers', $user_answers);
+//                                       ->with('user_expertise', $user_expertise);
         }else{
             abort(404);
         }
@@ -149,6 +144,9 @@ class UsersController extends Controller
             $expert->title      =   clean($request->expertise);
             $expert->text       =   $request->expertise_body;
             $expert->save();
+
+            $user = new User();
+            return $user->userExpertise($request->uuid);
         }
         else
         {
@@ -165,6 +163,7 @@ class UsersController extends Controller
     public function listExpertise(Request $request)
     {
 
-        return DB::table('experts')->where('user_uuid',$request->uuid)->get();
+        $user = new User();
+        return $user->userExpertise($request->uuid);
     }
 }

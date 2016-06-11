@@ -140,9 +140,9 @@ angular.module('App')
             'KEY_POST':       'โพสต์',
             'KEY_POSTED':     'โพสต์',
             'KEY_UPVOTE':     'อัฟโหวต',
-            'KEY_UPVOTED':    'อัฟโหวต',
+            'KEY_UPVOTED':    'คุณอัฟโหวต',
             'KEY_DWN_VOTE':   'ดาวน์โหวต',
-            'KEY_DWN_VOTED':  'ดาวน์โหวต',
+            'KEY_DWN_VOTED':  'คุณดาวน์โหวต',
             'KEY_VIEW':       'ผู้ชม',
             'KEY_REMOVE':     'ลบ',
             'KEY_CANCEL':     'ยกเลิก',
@@ -193,6 +193,7 @@ angular.module('App')
             'KEY_CONF_REM_C': 'เมื่อลบออกคุณจะไม่สามารถที่จะนำหัวข้อนี้กลับมา',
 
             //SENTENCE
+            'KEY_CAN_YOU_ANSWER':   'คุณตอบคำถามนี้ได้ไหม?',
             'KEY_WHAT_ON_UR_MIND':  'คุณกำลังคิดอะไรอยู่?',
             'KEY_YOU_WANT_FOLLOW':  'คุณอาจจะอยากติดตาม',
             'KEY_NO_ACCT_REGISTER': 'อยากเข้าใช้? มาทางนี้เลย',

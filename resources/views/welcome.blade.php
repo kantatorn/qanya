@@ -142,11 +142,39 @@
             </md-tabs>
 
         </div>
+
+        {{-- LEFT SIDE CHANNEL AND USER CARD, HIDE ON XS --}}
         <div flex hide-xs="true">
 
+            @if(Auth::user())
+                <md-card md-theme="blue" md-theme-watch>
+                    <md-card-title>
+                        <md-card-title-text>
+                            <span class="md-title">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }} </span>
+                            <span class="md-subhead">{{ '@'.Auth::user()->displayname }}</span>
+                        </md-card-title-text>
+                        <md-card-title-media>
+                            <div class="md-media-sm card-media">
+                                <img src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xft1/v/t1.0-1/p160x160/3768_10156694116535179_601632126662207422_n.jpg?oh=6da6cc0c3a2381aa4cff9a7a8e246547&oe=57C31D82&__gda__=1473662302_1348024b4e36c28a11e472233c1fd7c8">
+                            </div>
+                        </md-card-title-media>
+                    </md-card-title>
+                    <md-card-actions layout="row" layout-align="end center">
+                        <md-button>Action 1</md-button>
+                        <md-button>Action 2</md-button>
+                    </md-card-actions>
+                </md-card>
+            @endif
+
+            {{-- CHANNEL LISTING --}}
             @foreach($channels as $channel)
-                <md-button flex>{!! $channel->name !!}</md-button>
+                <md-button ng-href="/channel/{{ $channel->slug }}">{!! $channel->name !!}</md-button>
             @endforeach
+
+
+            {{-- TRENDING --}}
+            @include('layouts.tag_listing', ['tags' => $trendingTags])
+            
 
         </div>
 
