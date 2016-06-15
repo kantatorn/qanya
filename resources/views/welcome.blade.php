@@ -155,7 +155,7 @@
                         </md-card-title-text>
                         <md-card-title-media>
                             <div class="md-media-sm card-media">
-                                <img src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xft1/v/t1.0-1/p160x160/3768_10156694116535179_601632126662207422_n.jpg?oh=6da6cc0c3a2381aa4cff9a7a8e246547&oe=57C31D82&__gda__=1473662302_1348024b4e36c28a11e472233c1fd7c8">
+                                <img src="{{ Auth::user()->avatar }}">
                             </div>
                         </md-card-title-media>
                     </md-card-title>

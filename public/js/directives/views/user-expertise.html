@@ -1,0 +1,17 @@
+
+<md-content>
+    <md-list flex >
+        <md-list-item ng-repeat="expertise in data">
+            <div class="md-list-item-text" layout="column">
+                {{ expertise.title | htmlToPlaintext}}
+                {{ expertise.slug  | htmlToPlaintext}}
+                <div class="md-secondary">
+                    <md-button class="md-raised" ng-click="showActionToast()">
+                        X
+                    </md-button>
+                </div>
+            </div>
+        </md-list-item>
+
+    </md-list>
+</md-content>

@@ -154,6 +154,9 @@ return [
         Laravel\Socialite\SocialiteServiceProvider::class,
         Mews\Purifier\PurifierServiceProvider::class,
 
+        Intervention\Image\ImageServiceProvider::class,
+
+        SammyK\LaravelFacebookSdk\LaravelFacebookSdkServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -211,12 +214,17 @@ return [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Purifier' => Mews\Purifier\Facades\Purifier::class,
 
+
+
         // other Facades ommited
         'SEOMeta'   => Artesaos\SEOTools\Facades\SEOMeta::class,
         'OpenGraph' => Artesaos\SEOTools\Facades\OpenGraph::class,
         'Twitter'   => Artesaos\SEOTools\Facades\TwitterCard::class,
         // or
         'SEO' => Artesaos\SEOTools\Facades\SEOTools::class,
+
+        'Image' => Intervention\Image\Facades\Image::class,
+        'Facebook' => SammyK\LaravelFacebookSdk\FacebookFacade::class
     ],
 
 ];

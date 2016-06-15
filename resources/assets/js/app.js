@@ -1,10 +1,6 @@
 angular.module('App')
 
-    .filter('htmlToPlaintext', function() {
-        return function(text) {
-            return  text ? String(text).replace(/<[^>]+>/gm, '') : '';
-        };
-    })
+
 
     /**
      * App controller
@@ -30,20 +26,29 @@ angular.module('App')
     /**
      * User Controller
      * */
-    .controller('UserCtrl',function($http, $scope, $log, $window, $translate) {
+    .controller('UserCtrl',function($mdDialog, $http, $scope, $log, $window, $translate,toastr) {
         var userCtrl = this;
+        var originatorEv;
 
-        //userCtrl.expertiseArray = [];
+        userCtrl.expertiseArray = {};
+        userCtrl.pwdForm        = {};
+        userCtrl.editForm       = {};
 
+
+        userCtrl.openMenu = function($mdOpenMenu, ev) {
+            originatorEv = ev;
+            $mdOpenMenu(ev);
+        };
 
         /**
          * List user expertise
          **/
         userCtrl.expertiseList = function(uuid){
             $http.post('/listExpertise',{ uuid: uuid})
-            .then(function(response){
+            .success(function(response){
                 console.log(response);
-                userCtrl.expertiseArray = response.data;
+                userCtrl.expertiseArray = response;
+                return response;
             })
         }
 
@@ -59,10 +64,61 @@ angular.module('App')
                     expertise:      userCtrl.expertise,
                     expertise_body: userCtrl.expertise_body
             })
-            .then(function(response){
+            .success(function(response){
                 console.log(response);
-                userCtrl.expertiseArray = response.data;
+                userCtrl.expertiseArray = [];
+                userCtrl.expertiseArray = response;
+                return response;
             })
+        }
+
+
+        /**
+         * Add new profile image
+         * */
+        userCtrl.addProfileImage = function(files)
+        {
+
+            angular.forEach(files, function(flowFile, i){
+                var fileReader = new FileReader();
+                fileReader.onload = function (event) {
+                var uri = event.target.result;
+
+                    toastr.info('Saving...!')
+
+                    $http.post("/uploadAvatar", { data: uri} )
+                        .success(function( response ) {
+                            $('#profilePhoto').attr( "src", response);
+                            toastr.success('Save!');
+                        });
+                };
+                fileReader.readAsDataURL(flowFile.file);
+            });
+        }
+
+        /**
+         * Update user info*/
+        userCtrl.updateInfo = function()
+        {
+            toastr.info('Saving...!')
+
+            $http.post('/updateUserInfo',{ data: userCtrl.editForm })
+            .success(function(response){
+                toastr.success('Save!');
+            })
+        }
+
+        /**
+         * Update user's password here
+         */
+        userCtrl.changePass = function()
+        {
+            toastr.info('Saving...!')
+
+            $http.post('/updatePassword',{ data: userCtrl.pwdForm })
+                .success(function(response){
+                    toastr.success('Save!');
+                })
         }
 
     })

@@ -32,6 +32,10 @@ Route::resource('channel',  'ChannelController');
 Route::get('/create_displyname','UsersController@create_displayname');
 Route::post('/addExpertise','UsersController@addExpertise');
 Route::post('/listExpertise','UsersController@listExpertise');
+Route::post('/uploadAvatar','UsersController@uploadAvatar');
+Route::post('/updateUserInfo','UsersController@update');
+Route::post('/updatePassword','UsersController@updatePassword');
+
 
 
 /* QUESTION ROUTES */

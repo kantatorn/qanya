@@ -31,18 +31,17 @@ class HomeController extends Controller
     public function index()
     {
 
-        $topics = DB::table('topics')
-                ->join('channel','topics.channel','=','channel.id')
-                ->select('topics.*','channel.name as channel_name','channel.slug as channel_slug')
-                ->get();
-
+        $topics = new Topics();
+        $topicList = $topics->latestQuestion();
 
         $channels = Channel::all();
 
         $tags = new Tags();
         $trendingTags = $tags->trending();
 
-        return view('welcome',compact('topics','channels'))->with('trendingTags',$trendingTags);
+        return view('welcome',compact('channels'))
+                ->with('topics',$topicList)
+                ->with('trendingTags',$trendingTags);
     }
 
     //Redirect to the previous page

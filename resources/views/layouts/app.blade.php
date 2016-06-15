@@ -18,6 +18,7 @@
     <!-- Styles -->
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/bower_components/angular-toastr/dist/angular-toastr.css" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/css/tether.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="/css/all.css" rel="stylesheet">
@@ -49,9 +50,12 @@
             </md-button>
 
 
-            <a href="/" class="md-title purple-font">
-                <span>Qanya</span>
-            </a>
+            <span>
+                <a href="/" class="purple-font">
+                    <img src="https://www.abacus.com/img/q.png"
+                         width="60px">
+                </a>
+            </span>
 
 
             <span flex></span>
@@ -189,18 +193,15 @@
     <script src="/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="/bower_components/angular-translate/angular-translate.min.js"></script>
     <script src="/bower_components/angular-messages/angular-messages.js"></script>
+    <script src="/bower_components/ng-flow/dist/ng-flow-standalone.min.js"></script>
+    <script src="/bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
 
-
-    <!-- Firebase -->
-    <script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
-
-    <!-- AngularFire -->
-    <script src="https://cdn.firebase.com/libs/angularfire/1.2.0/angularfire.min.js"></script>
 
 
     <script src="/js/ng.js"></script>
     <script src="/js/translate.js"></script>
     <script src="/js/all.js"></script>
+    <script src="/js/directives/directive.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js"></script>

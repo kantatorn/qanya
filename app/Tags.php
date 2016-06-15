@@ -12,7 +12,6 @@ class Tags extends Model
 
     /**
      * Get topics from Tags name
-     *
      * @param  string  $id
      * @return array
      */
@@ -38,5 +37,21 @@ class Tags extends Model
                 ->get();
 
         return $list;
+    }
+
+
+    /**
+     * Get the most upvote person from this tag
+     * @param  string  $id
+     * @return array
+    */
+    public function mostUpvotePerson($id)
+    {
+        return DB::table('experts')
+            ->join('users', 'experts.user_uuid', '=', 'users.uuid')
+            ->where('title',clean($id))
+            ->select('experts.*',
+                     'users.firstname','users.lastname','users.displayname','users.followers','users.avatar')
+            ->get();
     }
 }

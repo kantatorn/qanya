@@ -1,4 +1,4 @@
-var app = angular.module('App', ['ngMaterial','ngMessages','ngCookies',
+var app = angular.module('App', ['ngMaterial','ngMessages','ngCookies','flow','ngAnimate', 'toastr',
                                  'ngSanitize','pascalprecht.translate'])
 
 //Material Theme
@@ -18,7 +18,7 @@ var app = angular.module('App', ['ngMaterial','ngMessages','ngCookies',
         'A200': 'ff5252',
         'A400': 'ff1744',
         'A700': 'd50000',
-        'contrastDefaultColor': 'dark', // whether, by default, text (contrast)
+        'contrastDefaultColor': 'light', // whether, by default, text (contrast)
         // on this palette should be dark or light
         'contrastDarkColors': ['50', '100', // hues which contrast should be 'dark' by default
             '200', '300', '400', 'A100'],
@@ -29,3 +29,10 @@ var app = angular.module('App', ['ngMaterial','ngMessages','ngCookies',
         .accentPalette('blue-grey')
         .warnPalette('orange');
 }])
+
+/* CONVERT ALL THE HTML TAG TO PLAIN TEXT */
+.filter('htmlToPlaintext', function() {
+    return function(text) {
+        return  text ? String(text).replace(/<[^>]+>/gm, '') : '';
+    };
+})

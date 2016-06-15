@@ -4,114 +4,90 @@
     <div layout="column" layout-align="center" class="layoutSingleColumn_compact md-padding" ng-controller="QuestionCtrl as questionCtrl" ng-cloak="">
 
         <div flex layout="row">
-
-            <div flex="100" flex-gt-xs="50">
-
-                <md-toolbar layout="row" class="md-hue-3">
-                    <div class="md-toolbar-tools">
-                        <span>Add what you know</span>
-                    </div>
-                </md-toolbar>
-
-                {{-- Add what you know / interested --}}
-                <div class="md-block" flex layout="solumn" ng-controller="UserCtrl as userCtrl">
-                    <form ng-submit="userCtrl.addExpertise('{{ Auth::user()->uuid }}')">
-                        <md-input-container class="md-block">
-                            <label>Name</label>
-                            <input ng-model="userCtrl.expertise" type="text" autocomplete="off">
-                        </md-input-container>
-
-                        <md-input-container class="md-block" ng-if="userCtrl.expertise">
-                            <label>details</label>
-                            <textarea ng-model="userCtrl.expertise_body"
-                                      md-maxlength="150" rows="5"
-                                      placeholder="optional"
-                                      md-select-on-focus></textarea>
-                        </md-input-container>
-
-                        <md-button class="md-primary md-block" type="submit">
-                            <md-icon md-svg-src="/icons/ic_send_black_24px.svg"></md-icon>
-                        </md-button>
-                    </form>
-                </div>
-
-                    <md-list flex>
-                        <md-subheader class="md-no-sticky">What topics do you know about?</md-subheader>
-                        <md-list-item class="md-3-line" ng-click="null">
-                            {{--<img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />--}}
-                            <div class="md-list-item-text" layout="column">
-                                <h3>1</h3>
-                                <h4>two</h4>
-                                <p>three</p>
-                                <div class="md-secondary">test</div>
-                            </div>
-                        </md-list-item>
-                    </md-list>
-                </md-content>
-            </div>
-
-            <div hide-xs="true" flex layout="column">
-
-                <md-input-container class="md-block" flex-gt-sm>
-                    <label>Add workplace</label>
-                    <input ng-model="user.firstName">
-                </md-input-container>
-
-                <md-input-container class="md-block" flex-gt-sm>
-                    <label>Add Education</label>
-                    <input ng-model="user.firstName">
-                </md-input-container>
-
-                <md-input-container class="md-block" flex-gt-sm>
-                    <label>Add Location</label>
-                    <input ng-model="user.firstName">
-                </md-input-container>
-            </div>
-        </div>
-
-        <div flex layout="row">
-            <div flex="100" flex-gt-xs="70">
+            <div flex="100" flex-gt-xs="70" ng-controller="UserCtrl as userCtrl">
 
                 {{--{{ print_r($user) }}--}}
 
                 <md-content>
-                    <h1 class="md-headline"> {{ $user->firstname }} {{ $user->lastname }}</h1>
+
+                    <div layout-align="center center" layout="column">
+
+                        <img src="{{ $user->avatar}}"
+                             id="profilePhoto"
+                             class="img-fluid img-circle"
+                             width="150px">
+
+                        <div flex>
+                            <a href="/profile/{{ $user->displayname }}">
+                                {{ $user->firstname }} {{ $user->lastname }}
+
+                            </a> | {{ '@'.$user->displayname }}
+
+                            <p>
+                                <span> {{ $user->description }}</span>
+                            </p>
+                        </div>
+
+                        @if($IS_USER)
+
+                            {{-- Other user menu--}}
+                            <md-menu>
+
+                                <md-button aria-label="menu" class="md-icon-button"
+                                           ng-click="$mdOpenMenu($event)">
+                                    <i class="material-icons">more_horiz</i>
+                                </md-button>
+
+                                <md-menu-content width="4" layout="column" layout-align="center center" >
+
+                                    {{-- CHANGE PROFILE IMG --}}
+                                    <md-menu-item>
+                                        <div flow-init
+                                             flow-name="uploader.flow"
+                                             flow-files-added="userCtrl.addProfileImage($files)">
+                                            <md-button flow-btn type="file" name="image">
+                                                @{{ 'KEY_UPLOAD_PHOTO' | translate }}
+                                            </md-button>
+                                        </div>
+                                    </md-menu-item>
+
+                                    {{-- EDTI / SETTING --}}
+                                    <md-menu-item>
+                                        <md-button class="" ng-href="{{ $user->displayname }}/edit">
+                                            @{{ 'KEY_SETTING' | translate }}
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    {{-- LOGOUT --}}
+                                    <md-menu-item>
+                                        <md-button ng-href="/logout">
+                                            @{{ 'KEY_LOGOUT' | translate }}
+                                        </md-button>
+                                    </md-menu-item>
+
+                                </md-menu-content>
+
+                            </md-menu>
+
+                        @endif
+
+
+                    </div>
+
 
                     {{-- QUESTIONS --}}
                     <md-tabs md-dynamic-height md-border-bottom>
                         <md-tab label="@{{ 'KEY_QUESTION' | translate }} {{ $user->questions }}">
                             <md-content>
                                 <md-list flex>
-                                    @foreach($user_questions as $user_question)
-                                        <md-list-item class="md-3-line" ng-click="null" ng-href="/question/{{ $user_question->uuid }}">
-                                            {{--<img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />--}}
-                                            <div class="md-list-item-text" layout="column">
-                                                <h3>
-                                                    <a href="/question/{{ $user_question->uuid }}">
-                                                        {{ strip_tags($user_question->topic) }}
-                                                    </a>
-                                                </h3>
-                                                <h4>
-                                                    <a href="/channel/{{ $user_question->channel_slug }}">
-                                                        {{ $user_question->channel_name }}
-                                                    </a>
-                                                </h4>
-                                                <p>
-                                                    @{{ 'KEY_ANSWER' | translate }} {{ $user_question->answer }}
-                                                    @{{ 'KEY_WNT_TO_KNOW' | translate }} {{ $user_question->follow }}
-                                                    @{{ 'KEY_VIEW' | translate }} {{ $user_question->views }}
-
-                                                    {!! \Carbon\Carbon::parse($user_question->created_at)->diffForHumans() !!}
-                                                </p>
-                                            </div>
-                                        </md-list-item>
-                                    @endforeach
+                                    @include('layouts.topic_listing', ['topics' => $user_questions])
                                 </md-list>
+
                             </md-content>
                         </md-tab>
 
                         {{-- ANSWERS --}}
-                        <md-tab label="@{{ 'KEY_ANSWER' | translate }}">
+                        <md-tab label="@{{ 'KEY_ANSWER' | translate }} {{ $user->answers }}">
                             <md-content class="md-padding">
                                 @foreach($user_answers as $answer)
                                     {{--{{ print_r($answer) }}--}}
@@ -133,14 +109,16 @@
                                                 @{{ 'KEY_DWN_VOTED' | translate }} {{ $answer->downvote }}
                                                 @{{ 'KEY_VIEW' | translate }} {{ $answer->views }}
 
-                                                {!! \Carbon\Carbon::parse($user_question->created_at)->diffForHumans() !!}
+                                                {!! \Carbon\Carbon::parse($answer->created_at)->diffForHumans() !!}
                                             </p>
                                         </div>
                                     </md-list-item>
                                 @endforeach
                             </md-content>
                         </md-tab>
-                        <md-tab label="@{{ 'KEY_FOLLOWER' | translate }}">
+
+                        {{-- FOLLOWERS --}}
+                        <md-tab label="@{{ 'KEY_FOLLOWER' | translate }} {{ $user->followers }}">
                             <md-content class="md-padding">
                                 <h1 class="md-display-2">Tab Two</h1>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla venenatis ante augue. Phasellus volutpat neque ac dui mattis vulputate. Etiam consequat aliquam cursus. In sodales pretium ultrices. Maecenas lectus est, sollicitudin consectetur felis nec, feugiat ultricies mi.</p>
@@ -152,28 +130,38 @@
 
             <div hide-xs="true" class="md-padding" flex layout="column">
 
+                {{-- Add what you know / interested --}}
+                @if(Auth::user())
+                <div class="md-block" flex layout="solumn" ng-controller="UserCtrl as userCtrl">
+                    <form ng-submit="userCtrl.addExpertise('{{ Auth::user()->uuid }}')">
+                        <md-input-container class="md-block">
+                            <label>Name</label>
+                            <input ng-model="userCtrl.expertise" type="text" autocomplete="off">
+                        </md-input-container>
+
+                        <md-input-container class="md-block" ng-if="userCtrl.expertise">
+                            <label>details</label>
+                            <textarea ng-model="userCtrl.expertise_body"
+                                      md-maxlength="150" rows="5"
+                                      placeholder="optional"
+                                      md-select-on-focus></textarea>
+                        </md-input-container>
+
+                        <md-button class="md-primary md-block" type="submit">
+                            <md-icon md-svg-src="/icons/ic_send_black_24px.svg"></md-icon>
+                        </md-button>
+                    </form>
+                </div>
+                @endif
+
                 @{{ 'KEY_INTEREST_IN' | translate }}
 
-                <md-content  ng-controller="UserCtrl as userCtrl">
-                    <md-list flex ng-init="userCtrl.expertiseList('{{Auth::user()->uuid}}')">
-                        {{--@foreach($user_expertise as $expertise)--}}
-                            <md-list-item ng-repeat="expertise in userCtrl.expertiseArray">
-                                <div class="md-list-item-text" layout="column">
-                                    @{{ expertise.title | htmlToPlaintext}}
-                                    @{{ expertise.slug  | htmlToPlaintext}}
-                                    {{--<a href="/tag/{{ strip_tags($expertise->slug) }}">--}}
-                                        {{--{{ strip_tags( $expertise->title) }}--}}
-                                    {{--</a>--}}
-                                    <div class="md-secondary">
-                                        <md-button class="md-raised" ng-click="showActionToast()">
-                                            X
-                                        </md-button>
-                                    </div>
-                                </div>
-                            </md-list-item>
-                        {{--@endforeach--}}
-                    </md-list>
-                </md-content>
+                <div ng-controller="UserCtrl as userCtrl"
+                     ng-init="userCtrl.expertiseList('{{  $user->uuid }}')">
+
+                    <user-expertise data="userCtrl.expertiseArray"></user-expertise>
+
+                </div>
             </div>
         </div>
     </div>

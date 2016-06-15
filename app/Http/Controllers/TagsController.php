@@ -53,6 +53,7 @@ class TagsController extends Controller
 
         $topics = $tags->topics($id);
         $trendingTags = $tags->trending();
+        $mostUpvotePerson = $tags->mostUpvotePerson($id);
 
         if(empty($topics))
         {
@@ -63,6 +64,7 @@ class TagsController extends Controller
             return view('pages.tag')
                 ->with('topics',$topics)
                 ->with('tag',$id)
+                ->with('mostUpvotePerson',$mostUpvotePerson)
                 ->with('trendingTags',$trendingTags);
         }
     }

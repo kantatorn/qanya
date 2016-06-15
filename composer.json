@@ -11,7 +11,7 @@
         "guzzlehttp/guzzle": "^6.2",
         "artesaos/seotools": "^0.8.2",
         "mews/purifier": "^2.0",
-        "facebook/php-sdk-v4": "^5.1",
+        "sammyk/laravel-facebook-sdk": "^3.0",
         "webpatser/laravel-uuid": "2.*",
         "nesbot/carbon": "^1.21",
         "intervention/image": "^2.3"

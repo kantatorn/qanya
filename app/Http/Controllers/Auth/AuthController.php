@@ -3,6 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Facebook\Facebook;
+use Illuminate\Support\Facades\Auth;
+use League\Flysystem\Exception;
+use SammyK\LaravelFacebookSdk\LaravelFacebookSdk;
+use Symfony\Component\Debug\Exception\FatalErrorException;
 use Validator;
 use Webpatser\Uuid\Uuid;
 use App\Http\Controllers\Controller;
@@ -33,21 +38,60 @@ class AuthController extends Controller
      * @return Response
      */
     public function handleProviderCallback()
+
     {
-        $user = Socialite::driver('facebook')->user('email');
+        $user = Socialite::driver('facebook')->user();
 
-        // OAuth Two Providers
-//        $token = $user->token;
+        $gender     =  $user->user['gender'];
+        $ext_id     =  $user->user['id'];
+        $verified   =  $user->user['verified'];
+        $avatar     =  $user->avatar;
+        $name = explode(' ',$user->name);
 
-        // OAuth One Providers
-        /*$token = $user->token;
-        $tokenSecret = $user->tokenSecret;*/
+
+        $social_exist = User::where('ext_id',$ext_id)->first();
 
 
-        print_r($user);
-        dd($user);
+        if($social_exist)
+        {
+            return $this->loginUsingId($social_exist->id);
+        }
+        else
+        {
+            $user_create = User::create([
+                'uuid'      => Uuid::generate(5,$user->email, Uuid::NS_DNS),
+                "firstname"    => "$name[0]",
+                "lastname"     => "$name[1]",
+                "email"        => "$user->email",
+                'password'     =>  bcrypt($ext_id),
+                "gender"       => "$gender",
+                "avatar"       =>  $avatar,
+                "ext_id"       =>  $ext_id,
+                "ext_source"   => "facebook",
+                "ext_verified" => "$verified"
+            ]);
+
+            return $this->loginUsingId($user_create->id);
+        }
     }
 
+
+    /**
+     * Log using using primary key
+     * @params int $id
+     * @return Redirect
+     */
+    public function loginUsingId($id)
+    {
+        Auth::user();
+        $user = Auth::loginUsingId($id,true);
+        if($user)
+        {
+            return redirect()->intended();
+        }else{
+            echo "unable to login";
+        }
+    }
 
 
     /*
