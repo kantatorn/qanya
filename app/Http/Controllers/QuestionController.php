@@ -94,6 +94,10 @@ class QuestionController extends Controller
             $topic->topic = clean($request->topic);
             $topic->channel = $request->channel;
             $topic->tags        = $taglist;
+
+            if(!$request->anon)
+                $topic->verified = 1;
+
             $topic->slug    = clean(str_replace(" ", "-", $topicSlug));
 
             $topic->save();

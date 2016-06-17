@@ -30,11 +30,76 @@ angular.module('App')
         var userCtrl = this;
         var originatorEv;
 
+        /* Init vars */
+        userCtrl.channelVisible     = false;
+        userCtrl.expertsVisible     = false;
+        userCtrl.profileCardVisible = false;
+
+        userCtrl.tagExpertiseList = []; //from init
         userCtrl.expertiseArray = {};
-        userCtrl.pwdForm        = {};
-        userCtrl.editForm       = {};
+        userCtrl.keys = [188];  //comma
+        userCtrl.pwdForm = {};
+        userCtrl.editForm = {};
+        userCtrl.isloading = false;
+        userCtrl.cardEnter = 'md-padding animated  rotateInDownRight';
+        userCtrl.cardLeave = 'animated rotateOutUpLeft';
+        //--- end var ---
+
+        /**
+         * Check user name
+         * */
+        userCtrl.checkUserName = function () {
+            userCtrl.isloading = true;
+            $http.post('/checkName', {
+                    name: userCtrl.username
+            })
+
+            .success(function (response) {
+                console.log(response);
+                userCtrl.nameVerified = true;
+                userCtrl.isloading = false;
+                return response;
+            })
+        }
 
 
+        userCtrl.isUsername = function(username)
+        {
+            console.log(username);
+            if(username){
+                userCtrl.channelVisible = true;
+            }
+        }
+
+
+        /**
+         * Save username
+         * */
+        userCtrl.saveUsername = function()
+        {
+            $http.post('/saveName', { name: userCtrl.username })
+            .success(function (response) {
+                userCtrl.channelVisible = true
+                return response;
+            })
+        }
+
+        /**
+         * Save channel
+         */
+        userCtrl.saveChannel = function ()
+        {
+            $http.post('/saveChannel', { channels: userCtrl.channelSelect })
+            .success(function (response) {
+                userCtrl.expertsVisible = true;
+                return response;
+            })
+        }
+
+
+        /**
+         * Open the menu windows
+         */
         userCtrl.openMenu = function($mdOpenMenu, ev) {
             originatorEv = ev;
             $mdOpenMenu(ev);
@@ -53,9 +118,23 @@ angular.module('App')
         }
 
 
+        /**
+         * Adding expertise tags as array
+         * */
+        userCtrl.addExpertiseList = function()
+        {
+            $http.post('/addExpertiseList',{
+                    expertiseList:      userCtrl.tagExpertiseList
+                })
+                .success(function(response){
+                    console.log(response);
+                    return response;
+                })
+        }
+
 
         /**
-         *
+         * Addiing experise as single string
          */
         userCtrl.addExpertise = function(uuid)
         {
@@ -78,7 +157,6 @@ angular.module('App')
          * */
         userCtrl.addProfileImage = function(files)
         {
-
             angular.forEach(files, function(flowFile, i){
                 var fileReader = new FileReader();
                 fileReader.onload = function (event) {
@@ -97,7 +175,8 @@ angular.module('App')
         }
 
         /**
-         * Update user info*/
+         * Update user info
+         * */
         userCtrl.updateInfo = function()
         {
             toastr.info('Saving...!')

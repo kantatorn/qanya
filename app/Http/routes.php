@@ -13,6 +13,7 @@
 
 Route::get('/', 'HomeController@index');
 Route::get('/previous', 'HomeController@previous');
+Route::get('/init_check', 'HomeController@init_check');
 
 
 
@@ -35,6 +36,11 @@ Route::post('/listExpertise','UsersController@listExpertise');
 Route::post('/uploadAvatar','UsersController@uploadAvatar');
 Route::post('/updateUserInfo','UsersController@update');
 Route::post('/updatePassword','UsersController@updatePassword');
+Route::post('/checkName','UsersController@checkName');
+Route::post('/saveChannel','UsersController@saveUserChannel');
+Route::post('/saveName','UsersController@saveUserName');
+Route::post('/addExpertiseList','UsersController@addExpertiseList');
+Route::get('/init_complete','UsersController@initComplete');
 
 
 

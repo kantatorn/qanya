@@ -29,6 +29,12 @@ class CreateTopicsAnswerComment extends Migration
         Schema::table('tags', function ($table) {
             $table->integer('channel_id')->index();
         });
+
+        //Adding channels to users table
+        Schema::table('users', function ($table) {
+            $table->string('channels');
+            $table->boolean('init_setup')->default(FALSE);
+        });
     }
 
     /**
@@ -39,5 +45,14 @@ class CreateTopicsAnswerComment extends Migration
     public function down()
     {
         Schema::drop('topics_answers_comments');
+
+        Schema::table('tags', function ($table) {
+            $table->dropColumn('channel_id');
+        });
+
+        Schema::table('users', function ($table) {
+            $table->dropColumn('channels');
+            $table->boolean('init_setup');
+        });
     }
 }

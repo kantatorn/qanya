@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Tags;
+use App\User;
 use Illuminate\Http\Request;
 
 use App\Topics;
 use App\Channel;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
@@ -20,7 +22,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('web');
+        $this->middleware('init_check');
     }
 
     /**
@@ -32,15 +34,25 @@ class HomeController extends Controller
     {
 
         $topics = new Topics();
+
         $topicList = $topics->latestQuestion();
+        $noAnswers = $topics->noAnswers();
 
         $channels = Channel::all();
 
         $tags = new Tags();
         $trendingTags = $tags->trending();
 
+        $channelFeed = null;
+        if(Auth::user()) {
+            $channelFeed = $topics->getChannelsFeed(Auth::user()->channels);
+        }
+
+
         return view('welcome',compact('channels'))
                 ->with('topics',$topicList)
+                ->with('noAnswers',$noAnswers)
+                ->with('channelFeed',$channelFeed)
                 ->with('trendingTags',$trendingTags);
     }
 
@@ -48,6 +60,19 @@ class HomeController extends Controller
     public function previous()
     {
         return redirect()->intended();
+    }
+
+    public function init_check()
+    {
+        $channels = Channel::all();
+        if(Auth::user())
+        {
+            return view('init-check.displayname',compact('channels'));
+        }
+        else
+        {
+            return redirect()->intended();
+        }
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\WelcomeUser;
 use App\User;
 use Facebook\Facebook;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Socialite;
+use Illuminate\Support\Facades\Event;
 
 class AuthController extends Controller
 {
@@ -71,7 +73,15 @@ class AuthController extends Controller
                 "ext_verified" => "$verified"
             ]);
 
-            return $this->loginUsingId($user_create->id);
+            $userObj = User::find($user_create->id);
+
+            if(Event::fire(new WelcomeUser($user_create)))
+            {
+                return $this->loginUsingId($user_create->id);
+            }else
+            {
+                //Redirect to error page and log in the incident
+            }
         }
     }
 
@@ -87,7 +97,7 @@ class AuthController extends Controller
         $user = Auth::loginUsingId($id,true);
         if($user)
         {
-            return redirect()->intended();
+            return redirect('/init_check');
         }else{
             echo "unable to login";
         }
@@ -112,7 +122,7 @@ class AuthController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/previous';
+    protected $redirectTo = '/init_check';
 
     /**
      * Create a new authentication controller instance.
@@ -147,12 +157,23 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'uuid'      => Uuid::generate(5,$data['email'], Uuid::NS_DNS),
             'firstname' => $data['firstname'],
             'lastname'  => $data['lastname'],
             'email'     => $data['email'],
             'password'  => bcrypt($data['password']),
         ]);
+
+        $userObj = User::find($user->id);
+
+        if(Event::fire(new WelcomeUser($userObj)))
+        {
+            return $user;
+        }else
+        {
+            //Redirect to error page and log in the incident
+        }
+
     }
 }

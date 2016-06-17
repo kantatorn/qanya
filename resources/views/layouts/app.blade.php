@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="/bower_components/angular-toastr/dist/angular-toastr.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/bower_components/animate.css/animate.min.css" crossorigin="anonymous">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/css/tether.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="/css/all.css" rel="stylesheet">
@@ -42,11 +44,11 @@
         <div class="md-toolbar-tools">
 
             {{-- Side bar menu toggle--}}
-            <md-button class="md-icon-button"
+            <md-button class="md-icon-button md-primary"
                        hide-gt-xs
                        aria-label="menu"
                        ng-click="toggleLeft()">
-                <md-icon md-svg-icon="/icons/ic_menu_black_24px.svg"></md-icon>
+                <i class="material-icons">menu</i>
             </md-button>
 
 
@@ -75,6 +77,7 @@
 
             @if(Auth::user())
 
+                @if(Auth::user()->init_setup)
                 {{-- Ask question --}}
                 <md-button
                         hide-xs
@@ -87,6 +90,7 @@
                     </span>
                     @{{ 'KEY_QUESTION' | translate }}
                 </md-button>
+                @endif
 
                 <md-button
                         hide-xs
@@ -147,7 +151,7 @@
                 @{{ 'KEY_DASHBOARD' | translate }}
             </md-button>
 
-            @if(Auth::user())
+            @if( (Auth::user()) && (Auth::user()->init_setup == 1))
 
                 {{-- Ask question --}}
                 <md-button class="md-hue-1"

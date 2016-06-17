@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
-class EventListener
+class NewAnswerListener
 {
     /**
      * Create the event listener.
@@ -41,7 +41,6 @@ class EventListener
 
         foreach($followers as $follower)
         {
-            print_r($follower);
             Mail::send('emails.new_answer', ['follower' => $follower], function ($m) use ($follower) {
                 $m->from('no-reply@qanya.com', 'Qanya?');
                 $m->to($follower->email, "$follower->firstname $follower->lastname")

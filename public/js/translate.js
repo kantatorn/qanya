@@ -210,6 +210,7 @@ angular.module('App')
             'KEY_FORGOT_PWD':       'ลืมรหัสผ่าน?',
             'KEY_UPLOAD_PHOTO':     'เปลี่ยนรูป',
             'KEY_TAGS_FOLLOW':      'แท็กที่คุณกำลังติดตาม',
+            'KEY_NAME_CREATE':      'ตั้งชื่อผู้ใช้ของคุณ',
             'KEY_NAME_CHG_ONCE':    'คำเตือน! คุณสามารถเปลี่ยนชื่อผู้ใช้ได้ครั้งเดียว',
             'KEY_SEL_CHN':          'เลือกช่อง',
             'KEY_IT_IS_ABOUT':      'เขียนเกี่ยวกับ...',
@@ -217,6 +218,7 @@ angular.module('App')
             'KEY_WRITE_SOMETHING':  'เริ่มเขียนเลย (สามารถ copy + paste ใส่ในนี้ได้)',
             'KEY_CODE_SENT':        'ส่งโค๊ดไปแล้วทางอีเมล์',
 
+            'KEY_RESET_PWD_CK':     'กดที่นี่เพื่อเปลี่ยนรหัสผ่าน',
 
             //VERIFICATION CODE
             'KEY_V_SIGN_UP':        'ขอบคุณที่สมัครใช้งานกับ Qanya กรุณาใส่รหัสผ่านที่เราส่งให้ไปทางอีเมล์ในช่องด้านล่าง',

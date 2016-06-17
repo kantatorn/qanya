@@ -36,11 +36,11 @@ return [
     ],
 
     'facebook' => [
-        'client_id'     => '266439737035266',
-        'client_secret' => 'ec0d7c8ff8724b2c17d5dfc7a5e8e33e',
+        'client_id'     => env('FACEBOOK_APP_ID'),
+        'client_secret' => env('FACEBOOK_APP_SECRET'),
         'scopes'        => ['email', 'user_birthday','user_about_me','user_education_history',
                             'user_location','user_work_history','user_hometown','user_likes'],
-        'redirect'      => 'http://qanya.local:8888/auth/facebook/callback',
+        'redirect'      => env('FACEBOOK_REDIRECT'),
     ],
 
 ];

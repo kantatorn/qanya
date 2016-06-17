@@ -25,7 +25,7 @@ class UsersController extends Controller
         {
             if(empty(Auth::user()->displayname))
             {
-                return redirect('/create_displyname');
+                return redirect('/init_check');
             }
             else{
                 return redirect()->action('UsersController@show',Auth::user()->displayname);
@@ -91,6 +91,7 @@ class UsersController extends Controller
                 if ($userInfo->uuid == Auth::user()->uuid) {
 
                     $IS_USER = TRUE;
+
                 } else {
                     $IS_USER = FALSE;
                 }
@@ -142,7 +143,6 @@ class UsersController extends Controller
 
     /**
     * Update User's password
-    *
     * @param  \Illuminate\Http\Request  $request
     */
     public function updatePassword(Request $request)
@@ -206,6 +206,108 @@ class UsersController extends Controller
 
         $user = new User();
         return $user->userExpertise($request->uuid);
+    }
+
+    /**
+     * Check for the existing username
+     */
+    public function checkName(Request $request)
+    {
+        $user = User::where('displayname',$request->name)->first();
+
+        //If the record exist
+        if($user)
+        {
+           return response()->json(['response' => false], 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        else
+        {
+            return response()->json(['response' => true], 200, [], JSON_UNESCAPED_UNICODE);
+        }
+    }
+
+    /**
+     * Save user favourite channel
+     * @param  \Illuminate\Http\Request  $request
+    */
+    public function saveUserChannel(Request $request)
+    {
+        $channels = $request->channels;
+        $list=array();
+        $i=0;
+        foreach($channels as $channel => $value)
+        {
+            // prevent false from material interface,
+            // sometime data send even though it is unchecked - weird
+            if($value)
+            {
+                $list[$i] = $channel;
+            }
+            $i++;
+        }
+
+        User::where('uuid',Auth::user()->uuid)
+            ->update(['channels' => implode(',',$list)]);
+    }
+
+
+    /**
+     * Add expertise list as array
+     * @param  \Illuminate\Http\Request  $request
+    */
+    public function addExpertiseList(Request $request)
+    {
+        //Tags - to store in tags table
+        $tag_data = array();
+        $count =0;
+        foreach($request->expertiseList as $tag)
+        {
+            //Master link of tags
+            $tag_data[$count] = array(
+                                    'user_uuid' => Auth::user()->uuid,
+                                    'title'     => clean($tag),
+                                    'created_at'=> date("Y-m-d H:i:s")
+                                );
+            $count++;
+        }
+
+        Experts::insert($tag_data);
+    }
+
+
+    public function initComplete()
+    {
+        if(Auth::user()->displayname)
+        {
+            User::where('uuid',Auth::user()->uuid)
+                ->update(['init_setup' => 1]);
+            return redirect()->intended();
+        }
+        else
+        {
+            return redirect('/init_check');
+        }
+    }
+
+    /**
+     * Save user displayname
+     * @param  \Illuminate\Http\Request  $request
+     */
+    public function saveUserName(Request $request)
+    {
+        $user = User::where('displayname',$request->name)->first();
+        if($user)
+        {
+
+            return response()->json(['response' => false], 200, [], JSON_UNESCAPED_UNICODE);
+        }
+        else
+        {
+            User::where('uuid',Auth::user()->uuid)
+                ->update(['displayname' => $request->name]);
+
+            return response()->json(['response' => true], 200, [], JSON_UNESCAPED_UNICODE);
+        }
     }
 
 
