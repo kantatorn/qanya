@@ -71,7 +71,7 @@ class HomeController extends Controller
         $channels = Channel::all();
         if(Auth::user())
         {
-            return view('init-check.setup',compact('channels'));
+            return view('pages.setup',compact('channels'));
         }
         else
         {
