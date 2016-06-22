@@ -1,5 +1,5 @@
 var app = angular.module('App', ['ngMaterial','ngMessages','ngCookies','flow','ngAnimate', 'toastr',
-                                 'ngSanitize','pascalprecht.translate'])
+                                 'ngSanitize','pascalprecht.translate','textAngular'])
 
 //Material Theme
 .config(["$mdThemingProvider", function ($mdThemingProvider) {
@@ -29,6 +29,18 @@ var app = angular.module('App', ['ngMaterial','ngMessages','ngCookies','flow','n
         .accentPalette('blue-grey')
         .warnPalette('orange');
 }])
+
+
+.config(function($provide) {
+    // this demonstrates how to register a new tool and add it to the default toolbar
+    $provide.decorator('taOptions', ['taRegisterTool', '$delegate', function(taRegisterTool, taOptions) { // $delegate is the taOptions we are decorating
+        taOptions.toolbar = [
+            ['bold', 'italics', 'ul', 'ol','indent', 'outdent'],
+            ['insertImage','insertLink', 'insertVideo']
+        ];
+        return taOptions;
+    }]);
+})
 
 /* CONVERT ALL THE HTML TAG TO PLAIN TEXT */
 .filter('htmlToPlaintext', function() {

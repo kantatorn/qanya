@@ -5,8 +5,10 @@
 
         <div flex="100" flex-gt-xs="70">
 
+            <md-content class="md-padding">
             {{--{{ print_r($topic) }}--}}
 
+            {{-- TAGS CHIPS --}}
             <md-chips class="md-primary md-hue-1">
                 @foreach(explode(",",$topic->tags) as $tag)
                     <md-chip>
@@ -180,7 +182,8 @@
 
                         <md-card-header>
                             <md-card-avatar>
-                                <img class="md-user-avatar" src="https://scontent.fbkk8-1.fna.fbcdn.net/v/t1.0-1/p160x160/3768_10156694116535179_601632126662207422_n.jpg?oh=6da6cc0c3a2381aa4cff9a7a8e246547&oe=57C31D82"/>
+                                <img class="md-user-avatar"
+                                     src="{{ Auth::user()->avatar }}"/>
                             </md-card-avatar>
                             <md-card-header-text>
                                 <span class="md-title">
@@ -226,6 +229,8 @@
                             </md-card-actions>
                         </md-content>
 
+                        <div text-angular ng-model="questionCtrl.answer_text"></div>
+
                         <md-input-container class="md-block">
                             <label>@{{ 'KEY_WRT_ANSWER' | translate }}</label>
                             <textarea required
@@ -242,6 +247,7 @@
                     </md-card>
             @endif
 
+            </md-content>
 
             <md-divider></md-divider>
 
@@ -257,7 +263,7 @@
                     {{--{{ print_r($answer) }}--}}
 
                     <md-list-item class="md-3-line md-long-text">
-                        <img ng-src="https://scontent.fbkk8-1.fna.fbcdn.net/v/t1.0-1/p160x160/3768_10156694116535179_601632126662207422_n.jpg?oh=6da6cc0c3a2381aa4cff9a7a8e246547&oe=57C31D82" class="md-avatar" alt="user" />
+                        <img ng-src="{{ $answer->avatar }}" class="md-avatar" alt="user" />
                         <div class="md-list-item-text">
 
                             <h3>
@@ -266,45 +272,28 @@
                                 </a>
                             </h3>
 
-                            <p>test</p>
-
                             <p>
-                                <div class="listing-article">
-                                    {{ strip_tags($answer->body) }}
-                                </div>
+                                @{{ 'KEY_VIEW' | translate }} {{ $answer->views }}
                             </p>
 
-                            <p>
-                                {!! \Carbon\Carbon::parse($answer->created_at)->diffForHumans() !!}
+                            <p class="md-body-1">
+                                {!! clean($answer->body) !!}
+                                <span class="md-caption">
+                                    {!! \Carbon\Carbon::parse($answer->created_at)->diffForHumans() !!}
+                                </span>
                             </p>
 
-                            <div layout="row" ng-controller="AnswerCtrl as answerCtrl">
 
-                                @if(Auth::user())
-                                    <md-button class="md-primary"
-                                               ng-init="answerCtrl.getAnswerStatus({{ $answer->uuid }},$index)"
-                                               ng-click="answerCtrl.upvote({{ $answer->uuid }})">
-                                @else
-                                    <md-button ng-ref="/login">
-                                @endif
-                                    เห็นด้วย @{{ answerCtrl.upvoteStatusText[$index] }}
-                                </md-button>
-                                <md-button class="md-primary">
-                                  โหวดลง
-                                </md-button>
-                                <md-button class="md-primary" ng-href="/answer/{{ $answer->uuid }}">
-                                    @{{ 'KEY_REPLY' | translate }}
-                                </md-button>
-                                <span flex></span>
-                            </div>
+                            {{-- ANSWER ACTIONABLE BUTTONS --}}
+                            @include('layouts.answer_action_btn',['answer' => $answer])
 
                         </div>
                     </md-list-item>
                 @endforeach
             <md-content>
-
         </div>
 
+        {{-- RIGHT SIDE --}}
         <div hide-xs="true" class="md-padding" flex layout="column">
 
             <md-content layout-align="center center">

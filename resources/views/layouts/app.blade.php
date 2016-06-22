@@ -78,6 +78,7 @@
             @if(Auth::user())
 
                 @if(Auth::user()->init_setup)
+
                 {{-- Ask question --}}
                 <md-button
                         hide-xs
@@ -87,8 +88,8 @@
                         <md-icon>
                             <i class="material-icons purple-font">create</i>
                         </md-icon>
-                    </span>
                     @{{ 'KEY_QUESTION' | translate }}
+                    </span>
                 </md-button>
                 @endif
 
@@ -114,10 +115,6 @@
                         @{{ 'KEY_LOGIN_REGISTER' | translate }}
                     </span>
 
-                    <md-tooltip md-direction="left">
-                        @{{ 'KEY_LOGIN_REGISTER' | translate }}
-                    </md-tooltip>
-
                 </md-button>
 
             @endif
@@ -127,7 +124,7 @@
     </md-toolbar>
 
     {{-- Main container--}}
-    <md-content layout-align="center">
+    <md-content layout-align="center" style="background: #fafafa">
         @yield('content')
     </md-content>
 
@@ -200,7 +197,11 @@
     <script src="/bower_components/ng-flow/dist/ng-flow-standalone.min.js"></script>
     <script src="/bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
 
-
+    {{-- https://github.com/fraywing/textAngular --}}
+    <link rel='stylesheet' href='/bower_components/textAngular/dist/textAngular.css'>
+    <script src='/bower_components/textAngular/dist/textAngular-rangy.min.js'></script>
+    <script src='/bower_components/textAngular/dist/textAngular-sanitize.min.js'></script>
+    <script src='/bower_components/textAngular/dist/textAngular.min.js'></script>
 
     <script src="/js/ng.js"></script>
     <script src="/js/translate.js"></script>

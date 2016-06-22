@@ -56,7 +56,9 @@ Route::post('/followStatus','QuestionController@followStatus');
 /* ANSWER ROUTES */
 Route::post('/commentAnswer','AnswerController@commentAnswer');
 Route::post('/upvoteAnswer','AnswerController@upvote');
+Route::post('/downvoteAnswer','AnswerController@downvote');
 Route::post('/upvoteAnswerStatus','AnswerController@upvoteStatus');
+Route::post('/upvoteAnswerStatus','AnswerController@downvoteStatus');
 
 
 Route::get('/home', 'HomeController@index');

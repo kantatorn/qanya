@@ -206,7 +206,7 @@ angular.module('App')
     /**
      * Question Controller
      * */
-    .controller('QuestionCtrl',function($http, $log, $window, $translate) {
+    .controller('QuestionCtrl',function($http, $log, $window, $translate, $location) {
 
         var questionCtrl = this;
 
@@ -269,10 +269,11 @@ angular.module('App')
                                     topic: topic_uuid,
                                     text:   questionCtrl.answer_text
             })
-            .then(function(response){
+            .success(function(response){
                 questionCtrl.answer_text        =   null;
                 questionCtrl.answerBtnStatus    =   false;
-                console.log(response);
+                console.log('/answer/'+response);
+                $window.location.href = '/answer/'+response;
             })
         }
 
@@ -454,16 +455,61 @@ angular.module('App')
     .controller('AnswerCtrl',function($http, $log, $window, $translate) {
         var answerCtrl = this;
 
-        answerCtrl.upvoteStatusText = [];
+        /*INIT VALUES*/
+        answerCtrl.upvoteStatusClass    =   [];
+        answerCtrl.downvoteStatusClass  =   [];
+        //END
 
+        /**
+         * Upvote answer
+         */
         answerCtrl.upvote = function(answer_uuid)
         {
             $http.post('/upvoteAnswer',{
                     answer: answer_uuid
-            })
-            .then(function(response) {
-                console.log(response);
-            })
+                })
+                .success(function(response) {
+                    answerCtrl.upvoteClass(response,answer_uuid);
+                })
+        }
+
+        /**
+         * Downvote answer
+         */
+        answerCtrl.downvote = function(answer_uuid)
+        {
+            $http.post('/downvoteAnswer',{
+                    answer: answer_uuid
+                })
+                .success(function(response) {
+                    answerCtrl.downvoteClass(response,answer_uuid);
+                })
+        }
+
+
+        answerCtrl.downvoteClass = function(data,answer_uuid)
+        {
+            if(data == 1)
+            {
+                answerCtrl.downvoteStatusClass[answer_uuid] = 'green-font';
+            }
+            else
+            {
+                answerCtrl.downvoteStatusClass[answer_uuid] = '';
+            }
+        }
+
+
+        answerCtrl.upvoteClass = function(data,answer_uuid)
+        {
+            if(data == 1)
+            {
+                answerCtrl.upvoteStatusClass[answer_uuid] = 'green-font';
+            }
+            else
+            {
+                answerCtrl.upvoteStatusClass[answer_uuid] = '';
+            }
         }
 
         /**

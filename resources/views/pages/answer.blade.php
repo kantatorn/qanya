@@ -5,46 +5,26 @@
 
         <div flex="100" flex-gt-xs="70">
 
+            <md-content class="md-padding">
+
             {{--{{ print_r($answer) }}--}}
-            <md-card class="md-padding">
+
                 <div>
-                    <span>ตอบในคำถาม</span>
-                    <p class="md-body">
+                    <span class="md-caption">ตอบในคำถาม</span>
+                    <p class="md-headline">
                         <a href="/question/{{ $answer->topic_uuid }}">
                             {{  strip_tags ($answer->topic) }}
                         </a>
                     </p>
 
-                    <h1 class="md-title reading">
-                        &quot;
-                        {{  strip_tags ($answer->body) }}
-                        &quot;
-                    </h1>
+                    <md-divider></md-divider>
 
-                    view
-                    {{  $answer->views }}
-                    up
-                    {{  $answer->upvote }}
-                    down
-                    {{  $answer->downvote }}
-
-                    {{ \Carbon\Carbon::parse($answer->created_at)->diffForHumans() }}
-                </div>
-
-
-                {{-- ABOUT AUTHOR SECTION --}}
-                <div style="padding-top: 20px" class="md-padding">
-                    <h1 class="md-title">
-                        @{{ 'KEY_ABT_AUTHOR' | translate }}
-                    </h1>
-
-                    <md-divider ></md-divider>
-
+                    {{-- ABOUT AUTHOR--}}
                     <md-content>
                         <md-list flex>
                             {{--<md-subheader class="md-no-sticky">3 line item (with hover)</md-subheader>--}}
                             <md-list-item class="md-3-line">
-                                <img src="https://scontent.fbkk8-1.fna.fbcdn.net/v/t1.0-1/p160x160/3768_10156694116535179_601632126662207422_n.jpg?oh=6da6cc0c3a2381aa4cff9a7a8e246547&oe=57C31D82"
+                                <img src="{{ $answer->avatar }}"
                                      class="md-avatar"
                                      alt="k" />
                                 <div class="md-list-item-text" layout="column">
@@ -54,12 +34,13 @@
                                         </a>
                                     </h3>
 
-                                    <h4>สนใจในเรื่อง
-                                        @foreach($user_expertise as $expertise)
-                                            <a href="{{ strip_tags($expertise->slug) }}">
-                                                {{ strip_tags($expertise->title) }}
-                                            </a>
-                                        @endforeach
+
+
+                                    <h4>
+
+                                        @{{ 'KEY_VIEW' | translate }}
+                                        {{  $answer->views }}
+
                                     </h4>
                                     <p>@{{ 'KEY_FOLLOWER' | translate }} {{ $answer->followers }}</p>
                                 </div>
@@ -70,9 +51,104 @@
                             </md-list-item>
                         </md-list>
                     </md-content>
+                    {{-- END ABOUT AUTHOR--}}
+
+                    <h1 class="md-title reading">
+                        {!! clean($answer->body)  !!}
+                    </h1>
+
+                    <div layout="row">
+
+                        {{-- ACTIONABLE BUTTONS--}}
+                        <div>
+
+                            {{-- Following the answer--}}
+                            @if(Auth::user())
+                                <md-button ng-init="questionCtrl.getFollowStatus('{{ $answer->uuid }}')"
+                                           aria-label=" @{{ 'KEY_WNT_TO_KNOW' | translate }}"
+                                           ng-click="questionCtrl.followQuestion('{{ $answer->uuid }}')">
+                                    @else
+                                        <md-button class="md-primary" aria-label="More" ng-href="/login">
+                                            @endif
+                                            <span ng-if="questionCtrl.followStatusText" class="green-font">
+                            <md-icon class="green-font">
+                                <i class="material-icons">grade</i>
+                            </md-icon>
+                                                @{{ 'KEY_FOLLOWING' | translate  }}
+                        </span>
+
+                        <span ng-if="!questionCtrl.followStatusText">
+                            <md-icon>
+                                <i class="material-icons md-inactive">grade</i>
+                            </md-icon>
+                            @{{ 'KEY_WNT_TO_KNOW' | translate  }}
+                        </span>
+
+                                        </md-button>
+
+
+                                        {{-- Up vote --}}
+                                        @if(Auth::user())
+                                            <md-button ng-click="questionCtrl.questionUpvote('{{ $answer->uuid }}')"
+                                                       ng-init="questionCtrl.upvoteStatus('{{ $answer->uuid }}')">
+                                                @else
+
+                                                    <md-button class="md-primary" aria-label="More" ng-href="/login">
+
+                                                        @endif
+
+                                                        <span ng-if="questionCtrl.upvoteStatusText" class="green-font md-padding">
+                             <md-icon class="green-font">
+                                 <i class="material-icons">thumb_up</i>
+                             </md-icon>
+                                                            @{{ 'KEY_UPVOTED' | translate  }}
+                        </span>
+
+                        <span ng-if="!questionCtrl.upvoteStatusText">
+                            <md-icon>
+                                <i class="material-icons md-inactive">thumb_up</i>
+                            </md-icon>
+                            @{{ 'KEY_UPVOTE' | translate  }}
+                        </span>
+                                                    </md-button>
+
+
+                                                    {{-- Down vote--}}
+                                                    @if(Auth::user())
+                                                        <md-button  ng-click="questionCtrl.questionDownvote('{{ $answer->uuid }}')"
+                                                                    ng-init="questionCtrl.downvoteStatus('{{ $answer->uuid }}')"
+                                                                    class="md-inactive">
+                                                            @else
+
+                                                                <md-button class="md-primary" aria-label="More" ng-href="/login">
+
+                                                                    @endif
+
+                                                                    <span ng-if="questionCtrl.downvoteStatusText" class="green-font md-padding">
+                            <md-icon class="green-font">
+                                <i class="material-icons">thumb_down</i>
+                            </md-icon>
+                                                                        @{{ 'KEY_DWN_VOTED' | translate  }}
+                        </span>
+
+                        <span ng-if="!questionCtrl.downvoteStatusText">
+                              <md-icon>
+                                  <i class="material-icons md-inactive">thumb_down</i>
+                              </md-icon>
+                            @{{ 'KEY_DWN_VOTE' | translate  }}
+                        </span>
+                                                                </md-button>
+
+
+                        </div>
+                        {{-- END ACTIONABLE BUTTONS --}}
+
+                        <span flex></span>
+                        {{ \Carbon\Carbon::parse($answer->created_at)->diffForHumans() }}
+                    </div>
                 </div>
-                {{-- END ABOUT AUTHOR--}}
-            </md-card>
+
+            </md-content>
 
 
             {{-- COMMENT--}}
@@ -85,7 +161,7 @@
                     @if(Auth::user())
                     <md-list flex>
                         <md-list-item class="md-3-line">
-                            <img src="https://scontent.fbkk8-1.fna.fbcdn.net/v/t1.0-1/p160x160/3768_10156694116535179_601632126662207422_n.jpg?oh=6da6cc0c3a2381aa4cff9a7a8e246547&oe=57C31D82"
+                            <img src="{{ Auth::user()->avatar }}"
                                  class="md-avatar"
                                  alt="k" />
                             <div flex>

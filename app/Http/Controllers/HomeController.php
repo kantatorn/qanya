@@ -62,12 +62,16 @@ class HomeController extends Controller
         return redirect()->intended();
     }
 
+
+    /**
+     * Init check for user who created account but haven't gone through verification stage
+    */
     public function init_check()
     {
         $channels = Channel::all();
         if(Auth::user())
         {
-            return view('init-check.displayname',compact('channels'));
+            return view('init-check.setup',compact('channels'));
         }
         else
         {

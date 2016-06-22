@@ -75,7 +75,7 @@
             {{-- Channel List --}}
             <md-card
                     ng-show ="userCtrl.channelVisible"
-                    {{--ng-hide ="userCtrl.channelSave"--}}
+                    ng-hide ="userCtrl.channelSave"
                     ng-class="userCtrl.createChannelCard"
                     ng-init ="userCtrl.createChannelCard = userCtrl.cardEnter;
                               userCtrl.isUsername('{{Auth::user()->displayname}}')">
@@ -119,7 +119,7 @@
             {{-- What Interest you--}}
             <md-card
                     ng-show ="userCtrl.expertsVisible"
-                    {{--ng-hide ="userCtrl.createExpertCardSave"--}}
+                    ng-hide ="userCtrl.expertsSave"
                     ng-class="userCtrl.createExpertCard"
                     ng-init ="userCtrl.createExpertCard = userCtrl.cardEnter">
 
@@ -150,7 +150,7 @@
                 <md-button
                         class="md-primary md-raised"
                         ng-click="userCtrl.addExpertiseList();
-                                  userCtrl.createExpertCardSave = true;
+                                  userCtrl.expertsSave = true;
                                   userCtrl.profileCardVisible = true;
                                   userCtrl.createExpertCard = userCtrl.cardLeave"
                         ng-if="userCtrl.tagExpertiseList.length > 0">

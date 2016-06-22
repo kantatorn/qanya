@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Answers;
+use App\Events\AnonPost;
 use App\Question;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 
+use Illuminate\Support\Facades\Event;
 use SEOMeta;
 use OpenGraph;
 use Twitter;
@@ -95,12 +97,19 @@ class QuestionController extends Controller
             $topic->channel = $request->channel;
             $topic->tags        = $taglist;
 
+            //Check if this post is anon if it easy, we manually verify
             if(!$request->anon)
                 $topic->verified = 1;
+
 
             $topic->slug    = clean(str_replace(" ", "-", $topicSlug));
 
             $topic->save();
+
+
+            //If topic is anon
+            if($request->anon)
+                Event::fire(new AnonPost($topic->id));
 
 
             //Tags - to store in tags table

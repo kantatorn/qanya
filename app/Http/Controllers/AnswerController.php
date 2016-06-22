@@ -61,6 +61,7 @@ class AnswerController extends Controller
             if($answer->save())
             {
                 Event::fire(new NewAnswer($lastID));
+                return $answerUUID;
             }
 
         }else{
@@ -226,6 +227,71 @@ class AnswerController extends Controller
             }
         }
     }
+
+
+
+    /**
+     * Down vote Answer
+     *
+     * @param  \Illuminate\Http\Request  $request
+     *
+     * @return int
+     */
+    public function downvote(Request $request)
+    {
+
+        if(Auth::user())
+        {
+            $answer = new Answers();
+            $is_voted = $answer->downvoteStatus(Auth::user()->uuid,$request->topic);
+
+            //if already down vote for this question
+            if($is_voted)
+            {
+
+                $this->resetVote($request,'downvote');
+
+                return 0;
+            }
+            else
+            {
+
+                $is_upvoted = $answer->upvoteStatus(Auth::user()->uuid,$request->topic);
+
+                if($is_upvoted)
+                    $this->resetVote($request,'upvote');
+
+                $this->incrementVote($request,'downvote',0);
+
+                return 1;
+            }
+
+        }
+        else{
+            abort(403);
+        }
+    }
+
+
+
+    /**
+     * Down vote status
+     * @param  \Illuminate\Http\Request  $request
+     */
+    public function downvoteStatus(Request $request)
+    {
+        if(Auth::user()) {
+            $question = new Question();
+            $is_voted = $question->downvoteStatus(Auth::user()->uuid, $request->topic);
+
+            if ($is_voted) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
 
 
     /**

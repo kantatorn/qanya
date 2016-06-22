@@ -20,9 +20,14 @@ class EventServiceProvider extends ServiceProvider
         ],
 
 
-        /*WELCOME EMAIL*/
+        //WELCOME EMAIL
         'App\Events\WelcomeUser' => [
             'App\Listeners\WelcomeListener',
+        ],
+
+        //ANON POST
+        'App\Events\AnonPost' => [
+            'App\Listeners\AnonPostListener',
         ],
     ];
 

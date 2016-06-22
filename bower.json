@@ -26,7 +26,8 @@
     "angular-messages": "^1.5.3",
     "ng-flow": "~2",
     "angular-toastr": "^1.7.0",
-    "animate.css": "^3.5.2"
+    "animate.css": "^3.5.2",
+    "textAngular": "^1.5.1"
   },
   "devDependencies": {
     "livereload-js": "^2.2.1",

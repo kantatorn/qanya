@@ -22,7 +22,7 @@ class AnswersComment extends Model
             ->join('users', 'topics_answers_comments.user_uuid', '=', 'users.uuid')
             ->where('topics_answers_comments.topic_answers_uuid',$id)
             ->select('topics_answers_comments.*',
-                     'users.firstname','users.lastname','users.displayname','users.followers')
+                     'users.firstname','users.lastname','users.displayname','users.followers','users.avatar')
             ->orderby('topics_answers_comments.created_at','DESC')
             ->get();
         return $list;

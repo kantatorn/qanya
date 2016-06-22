@@ -3,7 +3,7 @@
 @section('content')
 
 
-    <div layout="row" layout-align="center" class="layoutSingleColumn" >
+    <div layout="row" layout-align="center" class="layoutSingleColumn">
         <div flex="100" flex-gt-xs="60">
             <md-tabs md-dynamic-height md-border-bottom>
 
