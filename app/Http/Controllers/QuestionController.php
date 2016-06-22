@@ -90,12 +90,13 @@ class QuestionController extends Controller
             $taglist = implode(",", $request->tags);
 
             $topic = new Topics();
-            $topic->uuid = $topicUUID;
-            $topic->uid = Auth::user()->uuid;
-            $topic->anon = $request->anon;
-            $topic->topic = clean($request->topic);
+            $topic->uuid    = $topicUUID;
+            $topic->uid     = Auth::user()->uuid;
+            $topic->anon    = $request->anon;
+            $topic->topic   = clean($request->topic);
+            $topic->text    = clean($request->text);
             $topic->channel = $request->channel;
-            $topic->tags        = $taglist;
+            $topic->tags    = $taglist;
 
             //Check if this post is anon if it easy, we manually verify
             if(!$request->anon)
@@ -183,7 +184,7 @@ class QuestionController extends Controller
 
 
             //Incrementing views, will use REDIS later
-            DB::table('topics')->increment('views');
+            DB::table('topics')->where('uuid',$id)->increment('views');
 
             $answer = new Answers();
             $answers = $answer->answerList($id);

@@ -22,10 +22,13 @@ class Topics extends Model
         //Make sure that questions are active and verified
         return DB::table('topics')
             ->join('channel','topics.channel','=','channel.id')
+            ->join('users', 'topics.uid', '=', 'users.uuid')
             ->where('topics.flg','=',1)
             ->where('topics.verified','=',1)
             ->whereIn('topics.channel', $arr)
-            ->select('topics.*','channel.name as channel_name','channel.slug as channel_slug')
+            ->select('topics.*',
+                     'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
+                     'channel.name as channel_name','channel.slug as channel_slug')
             ->get();
     }
 
@@ -38,9 +41,12 @@ class Topics extends Model
         //Make sure that questions are active and verified
         return DB::table('topics')
                 ->join('channel','topics.channel','=','channel.id')
+                ->join('users', 'topics.uid', '=', 'users.uuid')
                 ->where('topics.flg','=',1)
                 ->where('topics.verified','=',1)
-                ->select('topics.*','channel.name as channel_name','channel.slug as channel_slug')
+                ->select('topics.*',
+                         'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
+                         'channel.name as channel_name','channel.slug as channel_slug')
                 ->get();
     }
 
@@ -53,8 +59,11 @@ class Topics extends Model
     {
         return DB::table('topics')
             ->join('channel','topics.channel','=','channel.id')
+            ->join('users', 'topics.uid', '=', 'users.uuid')
             ->where('topics.answer','=',0)
-            ->select('topics.*','channel.name as channel_name','channel.slug as channel_slug')
+            ->select('topics.*',
+                     'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
+                     'channel.name as channel_name','channel.slug as channel_slug')
             ->get();
     }
 }

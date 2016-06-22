@@ -20,8 +20,11 @@ class Tags extends Model
         return  DB::table('tags')
             ->join('topics', 'tags.topic_uuid', '=', 'topics.uuid')
             ->join('channel','topics.channel','=','channel.id')
+            ->join('users', 'topics.uid', '=', 'users.uuid')
             ->where('tags.title',clean($id))
-            ->select('topics.*','channel.name as channel_name','channel.slug as channel_slug')
+            ->select('topics.*',
+                     'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
+                     'channel.name as channel_name','channel.slug as channel_slug')
             ->get();
     }
 

@@ -30,12 +30,48 @@
                     {!! \Carbon\Carbon::parse($topic->created_at)->diffForHumans() !!}
                 </div>
 
-                <h1 class="md-display-1">
+                <h1 class="md-headline">
                     {{  strip_tags ($topic->topic) }}
                 </h1>
 
+                <p class="md-body-1">
+                    {!!  clean($topic->text)  !!}
+                </p>
+
+
+            </div>
+
+
+            <div layout="row" layout-align="start" class="md-padding" >
+
+                <div flex>
+                    <h1 class="md-headline">
+                        @{{ 'KEY_CAN_YOU_ANSWER' | translate }}
+                    </h1>
+                    มีคน {{ $topic->follow }} คนรอคำตอบอยู่
+
+
+                    @if(Auth::user())
+                    <md-button aria-label="@{{ 'KEY_REPLY' | translate }}"
+                               ng-click="questionCtrl.answerForm = true">
+
+                        <md-icon>
+                            <i class="material-icons md-inactive">create</i>
+                        </md-icon>
+
+                        @{{ 'KEY_REPLY' | translate }}
+
+
+                    </md-button>
+                    @else
+                        <md-button class="md-primary" aria-label="More" ng-href="/login">
+                            @{{ 'KEY_REPLY' | translate }}
+                        </md-button>
+                    @endif
+                </div>
+
                 {{-- STATIC CONTENT --}}
-                <div layout="row" layout-align="start center">
+                <div layout="column" layout-align="start">
 
                     <span flex>
                         @{{ 'KEY_VIEW' | translate }}
@@ -61,34 +97,8 @@
 
             </div>
 
-
-            <div layout-align="start" class="md-padding">
-
-                <h1 class="md-headline">
-                    @{{ 'KEY_CAN_YOU_ANSWER' | translate }}
-                </h1>
-                มีคน {{ $topic->follow }} คนรอคำตอบอยู่
-
-
-                @if(Auth::user())
-                <md-button aria-label="@{{ 'KEY_REPLY' | translate }}"
-                           ng-click="questionCtrl.answerForm = true">
-
-                    <md-icon>
-                        <i class="material-icons md-inactive">create</i>
-                    </md-icon>
-
-                    @{{ 'KEY_REPLY' | translate }}
-
-
-                </md-button>
-                @else
-                    <md-button class="md-primary" aria-label="More" ng-href="/login">
-                        @{{ 'KEY_REPLY' | translate }}
-                    </md-button>
-                @endif
-
-            </div>
+            {{-- ANSWER CARD--}}
+            @include('layouts.answer_card',['topic' => $topic]);
 
 
             {{-- ACTIONABLE BUTTONS--}}
@@ -175,77 +185,7 @@
             </div>
             {{-- END ACTIONABLE BUTTONS --}}
 
-            {{-- ANSWER FORM--}}
-            @if(Auth::user())
 
-                    <md-card class="md-padding" ng-show="questionCtrl.answerForm" ng-init="questionCtrl.answerForm = false">
-
-                        <md-card-header>
-                            <md-card-avatar>
-                                <img class="md-user-avatar"
-                                     src="{{ Auth::user()->avatar }}"/>
-                            </md-card-avatar>
-                            <md-card-header-text>
-                                <span class="md-title">
-                                    {{ Auth::user()->firstname }}
-                                    {{ Auth::user()->lastname }}
-                                </span>
-                                <span class="md-subhead">
-                                    @{{ questionCtrl.userExpertTopic }}
-                                    @{{ questionCtrl.userExpertTopicText }} ( 100 เห็นด้วย)
-                                    <md-button class="md-primary md-mini" ng-click="questionCtrl.userExpertiseShow = true">
-                                        ใส่ประสบการณ์
-                                    </md-button>
-                                </span>
-                            </md-card-header-text>
-                        </md-card-header>
-
-                        {{-- User Expertise --}}
-                        <md-content layout-padding ng-model="questionCtrl.userExpertise"
-                                    ng-init="questionCtrl.userExpertiseShow = false"
-                                    ng-show="questionCtrl.userExpertiseShow">
-                            <md-card-actions layout="row" layout-align="start center">
-
-                                <md-input-container class="md-block">
-                                    <md-select ng-model="questionCtrl.userExpertTopic">
-                                        @foreach(explode(",",$topic->tags) as $tag)
-                                            <md-option value="{{$tag}}">
-                                                {{$tag}}
-                                            </md-option>
-                                        @endforeach
-                                    </md-select>
-                                </md-input-container>
-
-                                <md-input-container class="md-block" flex-gt-sm>
-                                    <label>@{{ 'KEY_DETAILS' | translate }}</label>
-                                    <input autocomplete="off"
-                                           md-maxlength="80" required md-no-asterisk
-                                           name="question_topic"
-                                           ng-model="questionCtrl.userExpertTopicText">
-                                </md-input-container>
-
-                                <md-button ng-click="questionCtrl.userExpertiseSave()">@{{ 'KEY_SAVE' | translate }}</md-button>
-
-                            </md-card-actions>
-                        </md-content>
-
-                        <div text-angular ng-model="questionCtrl.answer_text"></div>
-
-                        <md-input-container class="md-block">
-                            <label>@{{ 'KEY_WRT_ANSWER' | translate }}</label>
-                            <textarea required
-                                      ng-model="questionCtrl.answer_text" md-maxlength="1000" rows="5"></textarea>
-                        </md-input-container>
-
-                        <md-button  type="submit"
-                                    ng-show="questionCtrl.answer_text.length"
-                                    ng-disabled="questionCtrl.answerBtnStatus"
-                                    class="md-accent md-raised"
-                                    ng-click="questionCtrl.answer_submit('{{$topic->uuid}}');
-                                              questionCtrl.answerBtnStatus=true">
-                                    @{{ 'KEY_REPLY' | translate }}</md-button>
-                    </md-card>
-            @endif
 
             </md-content>
 

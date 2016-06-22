@@ -21,7 +21,10 @@ class Channel extends Model
     {
         return  DB::table($this->topics_table)
                 ->join('channel', 'topics.channel', '=', 'channel.id')
-                ->select('topics.*', 'channel.name as channel_name', 'channel.slug as channel_slug')
+                ->join('users', 'topics.uid', '=', 'users.uuid')
+                ->select('topics.*',
+                        'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
+                        'channel.name as channel_name', 'channel.slug as channel_slug')
                 ->where('topics.channel', $id)
                 ->orderBy('topics.views','DESC')
                 ->get();
@@ -38,7 +41,10 @@ class Channel extends Model
     {
         return  DB::table($this->topics_table)
             ->join('channel', 'topics.channel', '=', 'channel.id')
-            ->select('topics.*', 'channel.name as channel_name', 'channel.slug as channel_slug')
+            ->join('users', 'topics.uid', '=', 'users.uuid')
+            ->select('topics.*',
+                     'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
+                     'channel.name as channel_name', 'channel.slug as channel_slug')
             ->where('topics.channel', $id)
             ->where('topics.answer', 0)
             ->get();

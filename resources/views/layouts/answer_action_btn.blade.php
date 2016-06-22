@@ -28,7 +28,7 @@ FOR: UPVOTE, DOWNVOTE, GO TO LANDING ANSWER LANDING PAGE
                  <i class="material-icons">thumb_up</i>
             </md-icon>
 
-            @{{ 'KEY_UPVOTED' | translate  }}
+            @{{ 'KEY_UPVOTE' | translate  }}
     </md-button>
 
 
@@ -50,7 +50,7 @@ FOR: UPVOTE, DOWNVOTE, GO TO LANDING ANSWER LANDING PAGE
             <i class="material-icons">thumb_down</i>
         </md-icon>
 
-        @{{ 'KEY_DWN_VOTED' | translate  }}
+        @{{ 'KEY_DWN_VOTE' | translate  }}
     </md-button>
 
 </div>

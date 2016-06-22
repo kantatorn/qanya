@@ -11,7 +11,7 @@
 
                 <div>
                     <span class="md-caption">ตอบในคำถาม</span>
-                    <p class="md-headline">
+                    <p class="md-body-1">
                         <a href="/question/{{ $answer->topic_uuid }}">
                             {{  strip_tags ($answer->topic) }}
                         </a>

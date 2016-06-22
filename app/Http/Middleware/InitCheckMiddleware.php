@@ -23,7 +23,7 @@ class InitCheckMiddleware
             if(!Auth::user()->init_setup)
             {
                 $channels = Channel::all();
-                return view('init-check.displayname',compact('channels'));
+                return view('pages.setup',compact('channels'));
             }
         }
         return $next($request);

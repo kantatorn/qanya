@@ -15,11 +15,7 @@
 
         <div flex="100" flex-gt-xs="60">
 
-            <md-content>
-                <md-list flex>
-                    @include('layouts.topic_listing', ['topics' => $topics])
-                </md-list>
-            </md-content>
+            @include('layouts.topic_listing_card', ['topics' => $topics])
 
         </div>
 

@@ -180,6 +180,7 @@ angular.module('App')
             'KEY_ANON':       'ไม่ออกนาม',
             'KEY_ANSWER':     'คำตอบ',
             'KEY_SETTING':    'ตั้งค่า',
+            'KEY_FOR_YOU':    'สำหรับคุณ',
 
             'KEY_HISTORY':    'ประวัติการเข้าชม',
             'KEY_WRITE_REPLY':'เขียนตอบ',

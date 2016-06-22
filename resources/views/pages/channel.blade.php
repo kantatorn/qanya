@@ -18,11 +18,15 @@
             <md-tabs md-dynamic-height md-border-bottom>
 
                 <md-tab label="@{{ 'KEY_MSTVIEW_TDAY' | translate }}">
-                    @include('layouts.topic_listing', ['topics' => $topics])
+
+                    @include('layouts.topic_listing_card', ['topics' => $topics])
+
                 </md-tab>
 
                 <md-tab label="@{{ 'KEY_NO_ANSWER' | translate }}">
-                    @include('layouts.noanswer_listing', ['topics' => $topics])
+
+                    @include('layouts.topic_listing_card', ['topics' => $noAnswers])
+
                 </md-tab>
 
             </md-tabs>

@@ -249,8 +249,9 @@ angular.module('App')
             $http.post('/question', {
                                         topic:  questionCtrl.question_topic,
                                         channel:questionCtrl.question_channel,
+                                        text:   questionCtrl.questionDetail,
                                         anon:   questionCtrl.question_anon,
-                                        tags: questionCtrl.tags,
+                                        tags:   questionCtrl.tags,
             })
             .then(function(response){
                 console.log(response);

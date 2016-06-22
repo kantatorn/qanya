@@ -1,7 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <div layout="row" layout-align="center" class="layoutSingleColumn_compact md-padding" ng-controller="QuestionCtrl as questionCtrl">
+
+    <div layout="row" layout-align="start" class="layoutSingleColumn_compact md-padding"
+         ng-controller="QuestionCtrl as questionCtrl">
+
         <div flex="100">
 
             {{--<form role="form" method="POST" action="{{ url('/question') }}">--}}
@@ -39,13 +42,18 @@
                             </md-select>
                         </md-input-container>
 
-                        {{-- Add question detail --}}
-                        <md-button class="md-primary" ng-click="">@{{ 'KEY_ADD_DETAILS' | translate }}</md-button>
-
                     </div>
 
+                    {{-- Add question detail --}}
+                    <md-button class="md-primary" ng-click="questionCtrl.questionDetailVisible = true">
+                        @{{ 'KEY_ADD_DETAILS' | translate }}
+                    </md-button>
 
-                    <div contenteditable="true" ng-show=""> details here</div>
+                    {{-- DETAILS --}}
+                    <div text-angular
+                         ng-init="questionCtrl.questionDetailVisible = false"
+                         ng-show="questionCtrl.questionDetailVisible"
+                         ng-model="questionCtrl.questionDetail"></div>
 
 
                     {{-- Add Tags --}}
@@ -64,13 +72,21 @@
 
                     <div layout="row" flex>
 
-                        <md-checkbox ng-init="questionCtrl.question_anon =0" ng-click="questionCtrl.anon=1" class="md-primary" name="anon" ng-model="questionCtrl.question_anon" aria-label="@{{ 'KEY_ANON' | translate }}">
+                        <md-checkbox ng-init="questionCtrl.question_anon =0"
+                                     ng-click="questionCtrl.anon=1;
+                                               anonDetail = true"
+                                     class="md-primary" name="anon" ng-model="questionCtrl.question_anon" aria-label="@{{ 'KEY_ANON' | translate }}">
                             @{{ 'KEY_ANON' | translate }}
                         </md-checkbox>
 
+                        <div ng-show="anonDetail" ng-init="anonDetail= false">
+                            ตั้งขำถามโดยไม่ออกนาม คำถามจะยังไม่ลงเวปทันที โดยที่จะถูกตรวจสอบก่อน
+                        </div>
+
                         <span flex></span>
 
-                        <md-button class="md-hue-1" type="submit">@{{ 'KEY_QUESTION' | translate }}</md-button>
+                        <md-button class="md-primary"
+                                   type="submit">@{{ 'KEY_QUESTION' | translate }}</md-button>
 
                     </div>
 

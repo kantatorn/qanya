@@ -6,6 +6,8 @@ use App\Answers;
 use App\AnswersComment;
 use App\Events\NewAnswer;
 use App\Experts;
+use App\Question;
+use App\Topics;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -57,6 +59,10 @@ class AnswerController extends Controller
             $answer->body       = clean($request->text);
 
             $lastID = $answer;
+
+            //Increment the number of answers for topic
+            $topic = new Topics();
+            $topic->where('uuid',$request->topic)->increment('answer');
 
             if($answer->save())
             {
