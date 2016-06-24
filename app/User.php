@@ -36,7 +36,10 @@ class User extends Authenticatable
     {
         return  DB::table('topics')->where('uid', $id)
                     ->join('channel', 'topics.channel', '=', 'channel.id')
-                    ->select('topics.*', 'channel.name as channel_name', 'channel.slug as channel_slug')
+                    ->join('users', 'topics.uid', '=', 'users.uuid')
+                    ->select('topics.*',
+                             'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
+                             'channel.name as channel_name', 'channel.slug as channel_slug')
                     ->get();
     }
 

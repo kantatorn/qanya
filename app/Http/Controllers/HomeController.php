@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Experts;
 use App\Http\Requests;
 use App\Tags;
 use App\User;
@@ -44,8 +45,11 @@ class HomeController extends Controller
         $trendingTags = $tags->trending();
 
         $channelFeed = null;
+        $userExperts = null;
+
         if(Auth::user()) {
             $channelFeed = $topics->getChannelsFeed(Auth::user()->channels);
+            $userExperts = Experts::where('user_uuid',Auth::user()->uuid)->get();
         }
 
 
@@ -53,6 +57,7 @@ class HomeController extends Controller
                 ->with('topics',$topicList)
                 ->with('noAnswers',$noAnswers)
                 ->with('channelFeed',$channelFeed)
+                ->with('experts',$userExperts)
                 ->with('trendingTags',$trendingTags);
     }
 
@@ -71,7 +76,16 @@ class HomeController extends Controller
         $channels = Channel::all();
         if(Auth::user())
         {
-            return view('pages.setup',compact('channels'));
+            //If they haven't gone through the setup
+            if(!Auth::user()->init_setup)
+            {
+                $channels = Channel::all();
+                return view('pages.setup',compact('channels'));
+            }
+            else
+            {
+                return redirect()->intended();
+            }
         }
         else
         {

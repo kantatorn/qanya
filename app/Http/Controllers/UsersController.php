@@ -183,7 +183,7 @@ class UsersController extends Controller
             $expert->user_uuid  =   Auth::user()->uuid;
             $expert->slug       =   str_replace(' ','-',clean($request->expertise));
             $expert->title      =   clean($request->expertise);
-            $expert->text       =   $request->expertise_body;
+            $expert->text       =   clean($request->expertise_body);
             $expert->save();
 
             $user = new User();

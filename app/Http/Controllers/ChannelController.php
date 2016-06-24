@@ -16,7 +16,7 @@ class ChannelController extends Controller
      */
     public function index()
     {
-        //
+        return Channel::all();
     }
 
     /**

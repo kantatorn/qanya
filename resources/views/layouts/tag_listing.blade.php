@@ -3,8 +3,13 @@
  @params array $tags
 --}}
 <md-card>
+
     <md-list>
-        <md-subheader class="md-no-sticky md-title">Trending</md-subheader>
+
+        <md-subheader class="md-no-sticky md-title">
+            <i class="material-icons">trending_up</i>
+            @{{ 'KEY_TRENDING' | translate }}
+        </md-subheader>
 
         @foreach($tags as $tag)
             <md-list-item>
@@ -18,4 +23,5 @@
         @endforeach
 
     </md-list>
+
 </md-card>

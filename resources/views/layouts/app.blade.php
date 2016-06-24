@@ -64,8 +64,7 @@
 
             <span>
                 <a href="/" class="purple-font">
-                    <img src="https://www.abacus.com/img/q.png"
-                         width="60px">
+                    <img src="/icons/qanya.gif" width="40px" class="img-fluid">
                 </a>
             </span>
 
@@ -94,9 +93,9 @@
                         hide-xs
                         aria-label="@{{ 'KEY_QUESTION' | translate }}"
                         href="/question/create">
-                    <span class="purple-font">
+                    <span class="green-font-1">
                         <md-icon>
-                            <i class="material-icons purple-font">create</i>
+                            <i class="material-icons green-font-1">create</i>
                         </md-icon>
                     @{{ 'KEY_QUESTION' | translate }}
                     </span>
@@ -118,9 +117,9 @@
                 <md-button aria-label="Person"
                            ng-href="{{ url('/login') }}"
                            hide-xs>
-                    <span class="purple-font">
+                    <span class="green-font-1">
                         <md-icon>
-                            <i class="material-icons purple-font">account_circle</i>
+                            <i class="material-icons green-font-1">account_circle</i>
                         </md-icon>
                         @{{ 'KEY_LOGIN_REGISTER' | translate }}
                     </span>
@@ -138,9 +137,11 @@
         @yield('content')
     </md-content>
 
+    {{-- CHANNEL SIDEBAR RIGHT--}}
     <md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
         <md-content layout-padding layout="column" layout-align="start">
-            test
+            {{-- CHANNEL LISTING --}}
+            <channels-button></channels-button>
         </md-content>
     </md-sidenav>
 

@@ -4,9 +4,9 @@ body {
     /*min-height:         75rem;*/
     /*padding-top:        6rem;*/
     /*margin-top:65px;*/
-    background-color:   #F5F8FA;
+    background-color:   #FAFAFA;
     /*height:100%;*/
-    color: #4D394B;
+    color: #272727;
     overflow:hidden;
 }
 .hand{
@@ -25,6 +25,9 @@ body {
     color:#4D394B;
 }
 
+.green-font-1{
+    color: #00ab6b;
+}
 .green-font{
     color:#5DB09D;
 }

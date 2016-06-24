@@ -189,6 +189,7 @@ angular.module('App')
             'KEY_BY':         'โดย',
             'KEY_ABT_AUTHOR': 'เกี่ยวกับคนเขียน',
             'KEY_INTEREST_IN':'สนใจเกี่ยวกับ',
+            'KEY_INTEREST_ADD':'เพิ่มสิ่งที่คุณสนใจ',
 
             //Remove topic
             'KEY_CONF_REMOVE':'คุณแน่ใจหรือว่าต้องการลบ?',

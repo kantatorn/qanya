@@ -5,20 +5,22 @@
     <md-card layout="row">
         {{--{{ print_r($topic) }}--}}
 
-        <div layout="column" layout-align="center center">
+        <div layout="column" layout-align="start center" >
 
 
-            <md-button class="md-icon-button" aria-label="Eat cake">
+            <md-button class="md-icon-button md-48" aria-label="Eat cake">
                 <md-icon>
-                    <i class="material-icons md-36">expand_less</i>
+                    <i class="material-icons">expand_less</i>
                 </md-icon>
             </md-button>
 
-            <span>{{ $topic->upvote - $topic->downvote }}</span>
+            <span
+                class="md-display-1"
+                layout-align="center center">{{ $topic->upvote - $topic->downvote }}</span>
 
-            <md-button class="md-icon-button" aria-label="Eat cake">
+            <md-button class="md-icon-button md-48" aria-label="Eat cake">
                 <md-icon>
-                    <i class="material-icons md-36">expand_more</i>
+                    <i class="material-icons">expand_more</i>
                 </md-icon>
             </md-button>
 

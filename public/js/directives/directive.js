@@ -11,3 +11,13 @@ angular.module('App')
             }
         }
     })
+
+    /* CHANNELS LISTTING BUTTONS */
+    .directive('channelsButton', function () {
+        return {
+            controller: 'AppCtrl as appCtrl',
+            restrict: 'EA',
+            transclude:   true,
+            templateUrl: '/js/directives/views/channels-button.html'
+        }
+    })

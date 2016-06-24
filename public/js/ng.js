@@ -30,7 +30,7 @@ var app = angular.module('App', ['ngMaterial','ngMessages','ngCookies','flow','n
         .warnPalette('orange');
 }])
 
-
+/* CONFIG THE TEXT EDITOR */
 .config(function($provide) {
     // this demonstrates how to register a new tool and add it to the default toolbar
     $provide.decorator('taOptions', ['taRegisterTool', '$delegate', function(taRegisterTool, taOptions) { // $delegate is the taOptions we are decorating

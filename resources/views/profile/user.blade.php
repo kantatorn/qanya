@@ -77,13 +77,11 @@
 
                     {{-- QUESTIONS --}}
                     <md-tabs md-dynamic-height md-border-bottom>
-                        <md-tab label="@{{ 'KEY_QUESTION' | translate }} {{ $user->questions }}">
-                            <md-content>
-                                <md-list flex>
-                                    @include('layouts.topic_listing', ['topics' => $user_questions])
-                                </md-list>
 
-                            </md-content>
+                        <md-tab label="@{{ 'KEY_QUESTION' | translate }} {{ $user->questions }}">
+
+                            @include('layouts.topic_listing_card', ['topics' => $user_questions])
+
                         </md-tab>
 
                         {{-- ANSWERS --}}

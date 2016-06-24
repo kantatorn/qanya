@@ -1,0 +1,14 @@
+<!-- CHANNELS BUTTON LISTING DIRECTIVES -->
+<md-content ng-init="appCtrl.getChannels()" layout="column">
+
+    <div class="md-title" layout-align="center center" layout="column">
+        {{ 'KEY_DASHBOARD' | translate }}
+    </div>
+
+    <md-button
+            class="md-block"
+            ng-repeat="channel in appCtrl.channnels"
+            ng-href="/channel/{{ channel.slug }}">{{ channel.name }}
+    </md-button>
+
+</md-content>

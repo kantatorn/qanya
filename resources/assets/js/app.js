@@ -5,7 +5,17 @@ angular.module('App')
     /**
      * App controller
      * */
-    .controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log, $translate) {
+    .controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $http, $translate) {
+
+        var appCtrl = this;
+
+        appCtrl.getChannels = function()
+        {
+            $http.get('/channel')
+            .success(function(response){
+                appCtrl.channnels = response;
+            })
+        }
 
         $scope.toggleLeft = buildToggler('left');
         $scope.toggleRight = buildToggler('right');
@@ -20,6 +30,8 @@ angular.module('App')
                     .toggle();
             }
         }
+
+
     })
 
 
@@ -138,6 +150,10 @@ angular.module('App')
          */
         userCtrl.addExpertise = function(uuid)
         {
+            userCtrl.expertiseArray.push(
+                {"id":1,"user_uuid":"b626c4e8-bcf7-5153-ab57-49de0b60eb98","slug":"","title":"<p>php<\/p>","text":null,"endorsed":0,"flg":1,"created_at":"2016-06-17 06:49:41","updated_at":null}
+            );
+            console.log(userCtrl.expertiseArray);
             $http.post('/addExpertise',{
                     uuid: uuid,
                     expertise:      userCtrl.expertise,
@@ -147,6 +163,7 @@ angular.module('App')
                 console.log(response);
                 userCtrl.expertiseArray = [];
                 userCtrl.expertiseArray = response;
+                console.log(userCtrl.expertiseArray);
                 return response;
             })
         }
