@@ -75,9 +75,11 @@ class Answers extends Model
             return  DB::table($this->table)
                 ->join('topics', 'topics_answers.topic_uuid', '=', 'topics.uuid')
                 ->join('users', 'topics_answers.user_uuid', '=', 'users.uuid')
+                ->leftJoin('experts', 'topics_answers.expert_uuid', '=', 'experts.id')
                 ->where('topics_answers.uuid', $id)
                 ->select('topics_answers.*',
                     'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
+                    'experts.title as expert_title', 'experts.text as expert_text',
                     'topics.topic','topics.uuid as topic_uuid')
                 ->first();
         });
@@ -101,6 +103,7 @@ class Answers extends Model
         $list = DB::table($this->table)
             ->join('topics', 'topics_answers.topic_uuid', '=', 'topics.uuid')
             ->join('users', 'topics_answers.user_uuid', '=', 'users.uuid')
+            ->leftJoin('experts', 'topics_answers.expert_uuid', '=', 'experts.id')
             ->leftJoin('user_vote', function($join)use($uid,$uid)
             {
                 $join->on('topics_answers.uuid', '=', 'user_vote.topic_uuid')
@@ -110,6 +113,7 @@ class Answers extends Model
             ->where('topics_answers.topic_uuid',$id)
             ->select('topics_answers.*',
                 'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
+                'experts.title as expert_title', 'experts.text as expert_text',
                 'topics.topic','topics.uuid as topic_uuid', DB::raw('case when user_vote.user_uuid is null then 0 else 1 end as isVoted'))
             ->orderby('topics_answers.upvote','DESC')
             ->get();

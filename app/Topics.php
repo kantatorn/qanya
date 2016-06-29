@@ -18,17 +18,30 @@ class Topics extends Model
     */
     public function getChannelsFeed($list)
     {
+        $uid = '0';
+
+        if(Auth::user()){
+            $uid = Auth::user()->uuid;
+        }
+
         $arr=explode(",",$list);
         //Make sure that questions are active and verified
         return DB::table('topics')
             ->join('channel','topics.channel','=','channel.id')
             ->join('users', 'topics.uid', '=', 'users.uuid')
+            ->leftJoin('user_vote', function($join)use($uid)
+            {
+                $join->on('topics.uuid', '=', 'user_vote.topic_uuid')
+                    ->where('user_vote.user_uuid', '=', $uid );
+
+            })
             ->where('topics.flg','=',1)
             ->where('topics.verified','=',1)
             ->whereIn('topics.channel', $arr)
             ->select('topics.*',
                      'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
-                     'channel.name as channel_name','channel.slug as channel_slug')
+                     'channel.name as channel_name','channel.slug as channel_slug',
+                     'user_vote.activity as voteActivity')
             ->get();
     }
 
@@ -38,15 +51,32 @@ class Topics extends Model
     */
     public function latestQuestion()
     {
+        $uid = '0';
+
+        if(Auth::user()){
+            $uid = Auth::user()->uuid;
+        }
+
         //Make sure that questions are active and verified
         return DB::table('topics')
                 ->join('channel','topics.channel','=','channel.id')
                 ->join('users', 'topics.uid', '=', 'users.uuid')
+                ->leftJoin('user_vote', function($join)use($uid)
+                {
+                    $join->on('topics.uuid', '=', 'user_vote.topic_uuid')
+                        ->where('user_vote.user_uuid', '=', $uid );
+
+                })
                 ->where('topics.flg','=',1)
                 ->where('topics.verified','=',1)
                 ->select('topics.*',
                          'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
-                         'channel.name as channel_name','channel.slug as channel_slug')
+                         'channel.name as channel_name','channel.slug as channel_slug',
+                         'user_vote.activity as voteActivity',
+                         DB::raw('case when
+                                    user_vote.user_uuid is null
+                                    then 0 else 1
+                                    end as isVoted'))
                 ->get();
     }
 
@@ -57,13 +87,26 @@ class Topics extends Model
     */
     public function noAnswers()
     {
+        $uid = '0';
+
+        if(Auth::user()){
+            $uid = Auth::user()->uuid;
+        }
+
         return DB::table('topics')
             ->join('channel','topics.channel','=','channel.id')
             ->join('users', 'topics.uid', '=', 'users.uuid')
+            ->leftJoin('user_vote', function($join)use($uid)
+            {
+                $join->on('topics.uuid', '=', 'user_vote.topic_uuid')
+                    ->where('user_vote.user_uuid', '=', $uid );
+
+            })
             ->where('topics.answer','=',0)
             ->select('topics.*',
                      'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
-                     'channel.name as channel_name','channel.slug as channel_slug')
+                     'channel.name as channel_name','channel.slug as channel_slug',
+                     'user_vote.activity as voteActivity')
             ->get();
     }
 }

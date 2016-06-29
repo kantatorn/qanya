@@ -10,20 +10,21 @@
     {{-- SEO STUFF --}}
     {!! SEO::generate() !!}
 
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+
     <!-- Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700">
     <link href='https://fonts.googleapis.com/css?family=Kanit:300&subset=thai,latin' rel='stylesheet' type='text/css'>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="/bower_components/angular-toastr/dist/angular-toastr.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="/bower_components/animate.css/animate.min.css" crossorigin="anonymous">
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/css/tether.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="/css/all.css" rel="stylesheet">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js"></script>
+
 
     @if ( Config::get('app.debug') )
         <script type="text/javascript">
@@ -31,9 +32,11 @@
         </script>
     @endif
 
-    {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
+    <script src="{{ elixir('js/all.js') }}"></script>
+    <link href="{{ elixir('css/all.css') }}" rel="stylesheet">
 
 </head>
+
 <body id="app-layout" ng-app="App" layout='row'>
 
 <!-- Load Facebook SDK for JavaScript -->
@@ -58,7 +61,9 @@
                        hide-gt-xs
                        aria-label="menu"
                        ng-click="toggleLeft()">
-                <i class="material-icons">menu</i>
+                <md-icon>
+                    <i class="material-icons">menu</i>
+                </md-icon>
             </md-button>
 
 
@@ -137,6 +142,7 @@
         @yield('content')
     </md-content>
 
+
     {{-- CHANNEL SIDEBAR RIGHT--}}
     <md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
         <md-content layout-padding layout="column" layout-align="start">
@@ -145,29 +151,27 @@
         </md-content>
     </md-sidenav>
 
+
     {{-- Sidebar for mobile --}}
     <md-sidenav class="md-sidenav-left md-whiteframe-4dp" md-component-id="left">
-        <md-toolbar class="md-theme-light">
-            <h1 class="md-toolbar-tools">search</h1>
-        </md-toolbar>
-        <md-content layout-padding layout="column" layout-align="start">
 
-            {{-- Channels --}}
-            <md-button class="md-hue-1"
-                       aria-label="@{{ 'KEY_DASHBOARD' | translate }}">
-                <md-icon md-svg-icon="/icons/ic_apps_black_24px.svg"></md-icon>
-                @{{ 'KEY_DASHBOARD' | translate }}
-            </md-button>
+        <md-content layout="column" layout-align="start start">
 
             @if( (Auth::user()) && (Auth::user()->init_setup == 1))
 
-                {{-- Ask question --}}
-                <md-button class="md-hue-1"
-                           aria-label="@{{ 'KEY_QUESTION' | translate }}"
-                           href="/question/create">
-                    <md-icon md-svg-icon="/icons/ic_create_black_24px.svg"></md-icon>
-                    @{{ 'KEY_QUESTION' | translate }}
-                </md-button>
+                <md-toolbar layout-align="start start">
+                    {{-- Ask question --}}
+                    <md-button class="md-hue-1"
+                               aria-label="@{{ 'KEY_QUESTION' | translate }}"
+                               href="/question/create">
+                        <span class="green-font-1">
+                            <md-icon>
+                                <i class="material-icons green-font-1">create</i>
+                            </md-icon>
+                            @{{ 'KEY_QUESTION' | translate }}
+                        </span>
+                    </md-button>
+                </md-toolbar>
 
                 {{-- User name and profile --}}
                 <md-button
@@ -179,51 +183,29 @@
                 </md-button>
 
             @else
+
                 {{-- Login button --}}
                 <md-button class="md-hue-1"
                            aria-label="Person"
                            ng-href="{{ url('/login') }}">
-                    <md-icon md-svg-icon="/icons/ic_account_circle_black_24px.svg"></md-icon>
-                    @{{ 'KEY_LOGIN_REGISTER' | translate }}
+                    <span class="green-font-1">
+                        <md-icon>
+                            <i class="material-icons green-font-1">account_circle</i>
+                        </md-icon>
+                        @{{ 'KEY_LOGIN_REGISTER' | translate }}
+                    </span>
                 </md-button>
 
             @endif
+
+            {{-- CHANNEL LISTING --}}
+            <channels-button></channels-button>
+
         </md-content>
     </md-sidenav>
 
 </div>
 
 
-
-
-
-    <!-- JavaScripts -->
-    <script src="/bower_components/angular/angular.min.js"></script>
-    <script src="/bower_components/angular-material/angular-material.min.js"></script>
-    <script src="/bower_components/angular-animate/angular-animate.min.js"></script>
-    <script src="/bower_components/angular-aria/angular-aria.min.js"></script>
-    <script src="/bower_components/angular-cookies/angular-cookies.min.js"></script>
-    <script src="/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-    <script src="/bower_components/angular-translate/angular-translate.min.js"></script>
-    <script src="/bower_components/angular-messages/angular-messages.js"></script>
-    <script src="/bower_components/ng-flow/dist/ng-flow-standalone.min.js"></script>
-    <script src="/bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
-
-    {{-- https://github.com/fraywing/textAngular --}}
-    <link rel='stylesheet' href='/bower_components/textAngular/dist/textAngular.css'>
-    <script src='/bower_components/textAngular/dist/textAngular-rangy.min.js'></script>
-    <script src='/bower_components/textAngular/dist/textAngular-sanitize.min.js'></script>
-    <script src='/bower_components/textAngular/dist/textAngular.min.js'></script>
-
-    <script src="/js/ng.js"></script>
-    <script src="/js/translate.js"></script>
-    <script src="/js/all.js"></script>
-    <script src="/js/directives/directive.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js"></script>
-    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
-    {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 </body>
 </html>

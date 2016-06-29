@@ -2,25 +2,38 @@
 
 @foreach($topics as $topic)
 
-    <md-card layout="row">
+    <md-card layout="row" ng-controller="QuestionCtrl as questionCtrl">
         {{--{{ print_r($topic) }}--}}
 
         <div layout="column" layout-align="start center" >
 
-
-            <md-button class="md-icon-button md-48" aria-label="Eat cake">
+            <md-button aria-label="@{{ 'KEY_UPVOTE' | translate }}"
+                       ng-click="questionCtrl.questionUpvote({{$topic->uuid}});
+                                 questionCtrl.upvoteListing[{{ $topic->uuid }}] = 'green-font-1';
+                                 questionCtrl.downvoteListing[{{ $topic->uuid }}] = ''">
                 <md-icon>
-                    <i class="material-icons">expand_less</i>
+                    <i  ng-class="questionCtrl.upvoteListing[{{ $topic->uuid }}]"
+                        ng-init="questionCtrl.voteHighlight('{{ $topic->uuid }}','{{$topic->voteActivity}}')"
+                        class="material-icons md-36">expand_less</i>
                 </md-icon>
             </md-button>
 
+            {{-- TALLY --}}
             <span
+                ng-init="questionCtrl.voteTallyCalc({{$topic->upvote }},{{  $topic->downvote}}, {{ $topic->uuid }})"
                 class="md-display-1"
-                layout-align="center center">{{ $topic->upvote - $topic->downvote }}</span>
+                layout-align="center center">
+                {{ questionCtrl.voteTally['<?php echo  $topic->uuid?>'] }}
+            </span>
 
-            <md-button class="md-icon-button md-48" aria-label="Eat cake">
+            <md-button aria-label="@{{ 'KEY_DWN_VOTE' | translate }}"
+                       ng-click="questionCtrl.questionDownvote({{$topic->uuid}});
+                                 questionCtrl.downvoteListing[{{ $topic->uuid }}] = 'green-font-1';
+                                 questionCtrl.upvoteListing[{{ $topic->uuid }}] = ''">
                 <md-icon>
-                    <i class="material-icons">expand_more</i>
+                    <i ng-class="questionCtrl.downvoteListing[{{ $topic->uuid }}]"
+                       ng-init="questionCtrl.voteHighlight('{{ $topic->uuid }}','{{$topic->voteActivity}}')"
+                       class="material-icons md-36">expand_more</i>
                 </md-icon>
             </md-button>
 
@@ -52,14 +65,14 @@
 
             <md-card-content>
 
-                <p class="md-body-1">
+                {{--<p class="md-body-1">
 
                     {!! str_limit(clean($topic->text),250) !!}
 
                     <a href="/profile/{{ $topic->displayname }}">
                         {{ '@'.$topic->displayname }}
                     </a>
-                </p>
+                </p>--}}
 
                 <div>
                     @if($topic->tags != null)

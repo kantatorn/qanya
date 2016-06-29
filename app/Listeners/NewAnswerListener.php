@@ -39,9 +39,13 @@ class NewAnswerListener
                                  'topics.topic')
                         ->get();
 
+        $latestAnswer = DB::table('topics_answers')->where('topic_uuid',$event->answer->topic_uuid)
+                        ->orderby('created_at','DESC')
+                        ->first();
+
         foreach($followers as $follower)
         {
-            Mail::send('emails.new_answer', ['follower' => $follower], function ($m) use ($follower) {
+            Mail::send('emails.new_answer', ['follower' => $follower , 'topic' => $latestAnswer], function ($m) use ($follower,$latestAnswer) {
                 $m->from('no-reply@qanya.com', 'Qanya?');
                 $m->to($follower->email, "$follower->firstname $follower->lastname")
                     ->subject('มีคำตอบใหม่ใน  '.strip_tags($follower->topic));

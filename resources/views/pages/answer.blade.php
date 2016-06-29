@@ -41,6 +41,10 @@
                                         @{{ 'KEY_VIEW' | translate }}
                                         {{  $answer->views }}
 
+                                        ·
+                                        <b>{{ strip_tags($answer->expert_title) }}</b>
+                                        <i>{{ strip_tags($answer->expert_text) }}</i>
+
                                     </h4>
                                     <p>@{{ 'KEY_FOLLOWER' | translate }} {{ $answer->followers }}</p>
                                 </div>
@@ -62,78 +66,51 @@
                         {{-- ACTIONABLE BUTTONS--}}
                         <div>
 
-                            {{-- Following the answer--}}
+                            {{-- Up vote --}}
                             @if(Auth::user())
-                                <md-button ng-init="questionCtrl.getFollowStatus('{{ $answer->uuid }}')"
-                                           aria-label=" @{{ 'KEY_WNT_TO_KNOW' | translate }}"
-                                           ng-click="questionCtrl.followQuestion('{{ $answer->uuid }}')">
-                                    @else
-                                        <md-button class="md-primary" aria-label="More" ng-href="/login">
-                                            @endif
-                                            <span ng-if="questionCtrl.followStatusText" class="green-font">
+                                <md-button ng-click="questionCtrl.questionUpvote('{{ $answer->uuid }}')"
+                                           ng-init="questionCtrl.upvoteStatus('{{ $answer->uuid }}')">
+                            @else
+                                <md-button class="md-primary" aria-label="More" ng-href="/login">
+                            @endif
+
+                                <span ng-if="questionCtrl.upvoteStatusText" class="green-font md-padding">
+                                    <md-icon class="green-font">
+                                        <i class="material-icons md-18">thumb_up</i>
+                                    </md-icon>
+                                    @{{ 'KEY_UPVOTED' | translate  }}
+                                </span>
+
+                                <span ng-if="!questionCtrl.upvoteStatusText">
+                                    <md-icon>
+                                        <i class="material-icons md-inactive md-18">thumb_up</i>
+                                    </md-icon>
+                                    @{{ 'KEY_UPVOTE' | translate  }}
+                                </span>
+                                </md-button>
+
+
+                            {{-- Down vote--}}
+                            @if(Auth::user())
+                            <md-button  ng-click="questionCtrl.questionDownvote('{{ $answer->uuid }}')"
+                                        ng-init="questionCtrl.downvoteStatus('{{ $answer->uuid }}')"
+                                        class="md-inactive">
+                            @else
+
+                                <md-button class="md-primary" aria-label="More" ng-href="/login">
+
+                            @endif
+
+                                        <span ng-if="questionCtrl.downvoteStatusText" class="green-font md-padding">
                             <md-icon class="green-font">
-                                <i class="material-icons">grade</i>
-                            </md-icon>
-                                                @{{ 'KEY_FOLLOWING' | translate  }}
-                        </span>
-
-                        <span ng-if="!questionCtrl.followStatusText">
-                            <md-icon>
-                                <i class="material-icons md-inactive">grade</i>
-                            </md-icon>
-                            @{{ 'KEY_WNT_TO_KNOW' | translate  }}
-                        </span>
-
-                                        </md-button>
-
-
-                                        {{-- Up vote --}}
-                                        @if(Auth::user())
-                                            <md-button ng-click="questionCtrl.questionUpvote('{{ $answer->uuid }}')"
-                                                       ng-init="questionCtrl.upvoteStatus('{{ $answer->uuid }}')">
-                                                @else
-
-                                                    <md-button class="md-primary" aria-label="More" ng-href="/login">
-
-                                                        @endif
-
-                                                        <span ng-if="questionCtrl.upvoteStatusText" class="green-font md-padding">
-                             <md-icon class="green-font">
-                                 <i class="material-icons">thumb_up</i>
-                             </md-icon>
-                                                            @{{ 'KEY_UPVOTED' | translate  }}
-                        </span>
-
-                        <span ng-if="!questionCtrl.upvoteStatusText">
-                            <md-icon>
-                                <i class="material-icons md-inactive">thumb_up</i>
-                            </md-icon>
-                            @{{ 'KEY_UPVOTE' | translate  }}
-                        </span>
-                                                    </md-button>
-
-
-                                                    {{-- Down vote--}}
-                                                    @if(Auth::user())
-                                                        <md-button  ng-click="questionCtrl.questionDownvote('{{ $answer->uuid }}')"
-                                                                    ng-init="questionCtrl.downvoteStatus('{{ $answer->uuid }}')"
-                                                                    class="md-inactive">
-                                                            @else
-
-                                                                <md-button class="md-primary" aria-label="More" ng-href="/login">
-
-                                                                    @endif
-
-                                                                    <span ng-if="questionCtrl.downvoteStatusText" class="green-font md-padding">
-                            <md-icon class="green-font">
-                                <i class="material-icons">thumb_down</i>
+                                <i class="material-icons md-18">thumb_down</i>
                             </md-icon>
                                                                         @{{ 'KEY_DWN_VOTED' | translate  }}
                         </span>
 
                         <span ng-if="!questionCtrl.downvoteStatusText">
                               <md-icon>
-                                  <i class="material-icons md-inactive">thumb_down</i>
+                                  <i class="material-icons md-inactive md-18">thumb_down</i>
                               </md-icon>
                             @{{ 'KEY_DWN_VOTE' | translate  }}
                         </span>

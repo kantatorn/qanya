@@ -12,11 +12,10 @@ ABOUT: DISPLAY LISTING AND ADD NEW INTEREST
 
             <md-subheader class="md-no-sticky" layout-align="center center" layout="row">
 
-                @{{ 'KEY_INTEREST_ADD' | translate }}
-
-                <md-button class="md-accent md-hue-2 md-icon-button md-fab md-mini"
+                <md-button class="md-accent md-hue-2"
                            ng-click="showAddExpertise = true">
-                    <i class="material-icons">create</i>
+                    <i class="material-icons" layout-align="center center">create</i>
+                    @{{ 'KEY_INTEREST_ADD' | translate }}
                 </md-button>
 
             </md-subheader>
@@ -59,7 +58,7 @@ ABOUT: DISPLAY LISTING AND ADD NEW INTEREST
                                 @{{ expertise.title | htmlToPlaintext}}
                             </a>
                             <p class="md-caption" ng-if="expertise.text">
-                                @{{ expertise.text }}
+                                @{{ expertise.text | htmlToPlaintext}}
                             </p>
                         </div>
 

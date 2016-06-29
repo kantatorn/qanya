@@ -57,6 +57,7 @@ class AnswerController extends Controller
             $answer->user_uuid  = Auth::user()->uuid;
             $answer->topic_uuid = $request->topic;
             $answer->body       = clean($request->text);
+            $answer->expert_uuid= $request->uExp?$request->uExp:0;
 
             $lastID = $answer;
 

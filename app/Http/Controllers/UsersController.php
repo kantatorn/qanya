@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Experts;
+use App\Tags;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -169,6 +170,18 @@ class UsersController extends Controller
     }
 
 
+    /**
+     * Get expert tags
+     */
+    public function getExpertTags(Request $request)
+    {
+
+        return  DB::table('experts')
+            ->whereIn(strip_tags('title'), [$request->tags])
+            ->get();
+
+    }
+
 
     /**
      * Add user expertise
@@ -250,6 +263,28 @@ class UsersController extends Controller
             ->update(['channels' => implode(',',$list)]);
     }
 
+
+    /**
+     * Update experience text
+     * @param  \Illuminate\Http\Request  $request
+     * @return int
+     */
+    public function updateExperience(Request $request)
+    {
+        if(Experts::where('user_uuid',Auth::user()->uuid)
+            ->where('title',clean($request->title))) {
+
+            if (Experts::where('user_uuid', Auth::user()->uuid)
+                ->where('title', clean($request->title))
+                ->update(['text' => clean($request->text)])
+            )
+                return 1;
+            else
+                return 0;
+        }else{
+        //If doesn't exist then insert
+        }
+    }
 
     /**
      * Add expertise list as array

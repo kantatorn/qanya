@@ -5,7 +5,7 @@
 
     <div layout="row" layout-align="center" class="layoutSingleColumn">
         
-        <div flex="100" flex-gt-xs="60">
+        <div flex="100" flex-gt-xs="70">
 
             <md-tabs md-dynamic-height md-border-bottom>
 
@@ -48,6 +48,17 @@
             @include('layouts.tag_listing', ['tags' => $trendingTags])
             
 
+            <md-content layout-padding>
+                <p class="md-caption">
+                    © 2016 Qanya
+                    <br>
+                    เกี่ยวกับเรา: แคนญา ตั้งเป้าไว้ว่าจะเป็นเวปรวมความรู้ ผู้รู้ และแชร์ประสบการ
+                    <br>
+                    ข้อตกลงในการใช้:
+                    <br>
+                    ติดต่อ: admin@qanya.com
+                </p>
+            </md-content>
         </div>
 
     </div>

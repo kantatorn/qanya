@@ -41,6 +41,8 @@ Route::post('/saveChannel','UsersController@saveUserChannel');
 Route::post('/saveName','UsersController@saveUserName');
 Route::post('/addExpertiseList','UsersController@addExpertiseList');
 Route::get('/init_complete','UsersController@initComplete');
+Route::post('/getExpertTags','UsersController@getExpertTags');
+Route::post('/updateExperienceText','UsersController@updateExperience');
 
 
 

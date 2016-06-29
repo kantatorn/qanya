@@ -10,6 +10,13 @@ class Question extends Model
 {
 
     /**
+     * REMINDER
+     * ACTIVITY FLG
+     * 2 = DOWNVOTE
+     * 1 = UPVOTE
+    */
+
+    /**
      * Get User up vote status
      *
      * @param
@@ -38,7 +45,7 @@ class Question extends Model
         $is_voted = DB::table('user_vote')
             ->where('user_uuid', $user_id)
             ->where('topic_uuid',$topic_id)
-            ->where(['activity' => 0])
+            ->where(['activity' => 2])
             ->first();
 
         return $is_voted;

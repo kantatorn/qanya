@@ -1,3 +1,4 @@
 {
-  "directory" : "public/bower_components"
+  "directory" : "resources/assets/js/bower_components",
+  "directory" : "resources/assets/css/bower_components"
 }

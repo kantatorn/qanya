@@ -13,7 +13,7 @@
 
     <div layout="row" layout-align="center" class="layoutSingleColumn" >
 
-        <div flex="100" flex-gt-xs="60">
+        <div flex="100" flex-gt-xs="70">
 
             @include('layouts.topic_listing_card', ['topics' => $topics])
 
@@ -37,7 +37,7 @@
                                         {{ $person->firstname }}
                                     </a>
                                 </h3>
-                                <p>{{ $person->text }}</p>
+                                <p>{{ strip_tags($person->text) }}</p>
                                 <span class="md-secondary"> {{ $person->endorsed }}</span>
                             </div>
                         </md-list-item>

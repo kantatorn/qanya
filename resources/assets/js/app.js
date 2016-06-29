@@ -130,6 +130,16 @@ angular.module('App')
         }
 
 
+        userCtrl.expertAnswerList = function(tag)
+        {
+            console.log(tag + 'test answerlist')
+            angular.forEach(userCtrl.expertiseArray, function(value, key) {
+                console.log(value + key);
+            });
+
+        }
+
+
         /**
          * Adding expertise tags as array
          * */
@@ -144,6 +154,21 @@ angular.module('App')
                 })
         }
 
+        /**
+         * Update text description for user expertise
+         * */
+        userCtrl.updateExpertise = function(key,title)
+        {
+            toastr.info("saving...");
+            $http.post('/updateExperienceText',{
+                    title:  title,
+                    text:   userCtrl.expText[key]
+                })
+                .success(function(response){
+                    toastr.success('saved');
+                    return response;
+                })
+        }
 
         /**
          * Addiing experise as single string
@@ -231,7 +256,9 @@ angular.module('App')
         // Any key code can be used to create a custom separator
         questionCtrl.keys = [188]; //Comma
         questionCtrl.tags = [];
-
+        questionCtrl.upvoteListing = [];
+        questionCtrl.downvoteListing = [];
+        questionCtrl.voteTally = [];
 
         /**
          * Default value set here
@@ -241,6 +268,16 @@ angular.module('App')
         questionCtrl.followStatusText   = false;
         questionCtrl.downvoteStatusText = false;
 
+
+        questionCtrl.getExpertiseTag = function(tags)
+        {
+            console.log(tags);
+
+            $http.post('/getExpertTags', { tags: tags})
+            .success(function(response){
+                console.log(response);
+            })
+        }
 
         /**
          * Pass the upvote count to ng
@@ -284,8 +321,9 @@ angular.module('App')
         questionCtrl.answer_submit = function(topic_uuid)
         {
             $http.post('/answer', {
-                                    topic: topic_uuid,
-                                    text:   questionCtrl.answer_text
+                                    topic:  topic_uuid,
+                                    text:   questionCtrl.answer_text,
+                                    uExp:   questionCtrl.userExpertId
             })
             .success(function(response){
                 questionCtrl.answer_text        =   null;
@@ -319,6 +357,27 @@ angular.module('App')
                     questionCtrl.followStatusText = false;
                 }
             })
+        }
+
+        questionCtrl.voteTallyCalc = function(upvote,downvote,topic_uuid)
+        {
+            questionCtrl.voteTally[topic_uuid] = upvote - downvote;
+        }
+
+        /**
+         * Determine if button should be highlight
+         * */
+        questionCtrl.voteHighlight = function(topic_uuid,voteActivity)
+        {
+            if(voteActivity == 1)
+            {
+                questionCtrl.upvoteListing[topic_uuid] = 'green-font-1';
+            }
+            else if(voteActivity == 2)
+            {
+                questionCtrl.downvoteListing[topic_uuid] = 'green-font-1';
+            }
+
         }
 
 

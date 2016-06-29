@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Answers;
 use App\Events\AnonPost;
+use App\Experts;
 use App\Question;
 use Illuminate\Http\Request;
 
@@ -168,11 +169,13 @@ class QuestionController extends Controller
                 ->take(15)
                 ->get();
 
+        $tags = new Tags();
+        $tagsChannel = $tags->trendingTagsChannel($topic->channel);
+
         if(empty($topic))
         {
             abort(404);
         }else{
-
 
             /* SEO */
             SEO::setTitle($topic->topic. ' Qanya');
@@ -182,6 +185,16 @@ class QuestionController extends Controller
             SEO::twitter()->setSite('@LuizVinicius73');
             /* END SEO */
 
+            $userExperts = null;
+
+            //Check if user log in
+            if(Auth::user())
+            {
+                $expert = new Experts();
+                $userExperts = $expert->userExpertise(Auth::user()->uuid,99);
+//                $userExperts = Experts::where('user_uuid',Auth::user()->uuid)->get();
+
+            }
 
             //Incrementing views, will use REDIS later
             DB::table('topics')->where('uuid',$id)->increment('views');
@@ -191,6 +204,8 @@ class QuestionController extends Controller
 
             return view('pages.page')->with('topic',$topic)
                                     ->with('similar_topics',$similar_topics)
+                                    ->with('tagsChannel',$tagsChannel)
+                                    ->with('userExperts',$userExperts)
                                     ->with('answers',$answers);
         }
     }
@@ -405,7 +420,7 @@ class QuestionController extends Controller
                 if($is_upvoted)
                     $this->resetVote($request,'upvote');
 
-                $this->incrementVote($request,'downvote',0);
+                $this->incrementVote($request,'downvote',2);
 
                 return 1;
             }

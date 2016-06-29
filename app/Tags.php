@@ -28,6 +28,7 @@ class Tags extends Model
             ->get();
     }
 
+
     /**
      * Trending tag - order by latest
      */
@@ -38,6 +39,23 @@ class Tags extends Model
                 ->groupBy('title')
                 ->orderBy('tag_count','desc')
                 ->get();
+
+        return $list;
+    }
+
+
+    /**
+     * Trending tag channel - order by latest
+     * @param  int  $id
+     */
+    public function trendingTagsChannel($id)
+    {
+        $list = DB::table($this->table)
+            ->where('channel_id',$id)
+            ->select('title',DB::raw('count(id) as tag_count'))
+            ->groupBy('title')
+            ->orderBy('tag_count','desc')
+            ->get();
 
         return $list;
     }
