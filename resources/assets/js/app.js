@@ -359,6 +359,9 @@ angular.module('App')
             })
         }
 
+        /**
+         * Calculate the tally value
+         */
         questionCtrl.voteTallyCalc = function(upvote,downvote,topic_uuid)
         {
             questionCtrl.voteTally[topic_uuid] = upvote - downvote;

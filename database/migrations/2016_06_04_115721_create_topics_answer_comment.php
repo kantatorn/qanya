@@ -52,7 +52,7 @@ class CreateTopicsAnswerComment extends Migration
 
         Schema::table('users', function ($table) {
             $table->dropColumn('channels');
-            $table->boolean('init_setup');
+            $table->dropColumn('init_setup');
         });
     }
 }
