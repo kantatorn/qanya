@@ -31,7 +31,7 @@
 
                     <br>
 
-                    <h1 class="md-title">
+                    <h1 class="md-headline">
                         {{  strip_tags ($topic->topic) }}
                     </h1>
 
@@ -44,12 +44,12 @@
             <md-divider></md-divider>
 
 
-            {{-- CAN YOU ANSWE AND STAT --}}
+            {{-- CAN YOU ANSWER AND STAT --}}
             <div layout="row" layout-xs="column" layout-align="start" class="md-padding" >
 
                 <div flex layout="column" layout-align="center center">
 
-                    <h1 class="md-headline">
+                    <h1 class="md-title">
                         @{{ 'KEY_CAN_YOU_ANSWER' | translate }}
                     </h1>
 
@@ -202,14 +202,14 @@
                    {{ count($answers) }} @{{ 'KEY_ANSWER' | translate }}
                 </h1>
 
-                @foreach($answers as $answer)
+                @foreach($answers as $key=>$answer)
 
                     {{--{{ print_r($answer) }}--}}
 
                     <md-list-item class="md-3-line md-padding">
                         <img ng-src="{{ $answer->avatar }}" class="md-avatar" alt="user" />
                         <div class="md-list-item-text">
-
+                            <b class="md-caption">@{{ 'KEY_COMMENTS_NUM' | translate }} {{ $key + 1 }} </b>
                             <h3>
                                 <span class="md-caption">
                                     <a href="/profile/{{ $answer->displayname }}">

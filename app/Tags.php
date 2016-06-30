@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Tags extends Model
@@ -17,14 +18,27 @@ class Tags extends Model
      */
     public function topics($id)
     {
+        $uid = '0';
+
+        if(Auth::user()){
+            $uid = Auth::user()->uuid;
+        }
+
         return  DB::table('tags')
             ->join('topics', 'tags.topic_uuid', '=', 'topics.uuid')
             ->join('channel','topics.channel','=','channel.id')
             ->join('users', 'topics.uid', '=', 'users.uuid')
+            ->leftJoin('user_vote', function($join)use($uid)
+            {
+                $join->on('topics.uuid', '=', 'user_vote.topic_uuid')
+                    ->where('user_vote.user_uuid', '=', $uid );
+
+            })
             ->where('tags.title',clean($id))
             ->select('topics.*',
                      'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
-                     'channel.name as channel_name','channel.slug as channel_slug')
+                     'channel.name as channel_name','channel.slug as channel_slug',
+                     'user_vote.activity as voteActivity')
             ->get();
     }
 

@@ -61,6 +61,7 @@ Route::post('/upvoteAnswer','AnswerController@upvote');
 Route::post('/downvoteAnswer','AnswerController@downvote');
 Route::post('/upvoteAnswerStatus','AnswerController@upvoteStatus');
 Route::post('/upvoteAnswerStatus','AnswerController@downvoteStatus');
+Route::post('/answerReplyListing','AnswerController@replyListing');
 
 
 Route::get('/home', 'HomeController@index');

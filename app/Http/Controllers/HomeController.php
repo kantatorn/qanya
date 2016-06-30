@@ -13,6 +13,7 @@ use App\Channel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use SEO;
 
 class HomeController extends Controller
 {
@@ -31,8 +32,14 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+
+        /* SEO */
+        SEO::setTitle('Qanya.com - หน้าแรก');
+        SEO::opengraph()->setUrl($request->url());
+        SEO::opengraph()->addProperty('type', 'articles');
+        /* END SEO */
 
         $topics = new Topics();
 

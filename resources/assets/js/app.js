@@ -516,17 +516,7 @@ angular.module('App')
         }
 
 
-        //Comment on answer
-        questionCtrl.commentAnswer = function(topic_answers_uuid)
-        {
-            $http.post('/commentAnswer',{
-                    topic: topic_answers_uuid,
-                    body:   questionCtrl.answer_comment
-            })
-            .then(function(response){
-                console.log(response);
-            })
-        }
+
 
     })
 
@@ -538,6 +528,7 @@ angular.module('App')
         /*INIT VALUES*/
         answerCtrl.upvoteStatusClass    =   [];
         answerCtrl.downvoteStatusClass  =   [];
+        answerCtrl.answerReplyArr       =   [];
         //END
 
         /**
@@ -562,6 +553,7 @@ angular.module('App')
                     answer: answer_uuid
                 })
                 .success(function(response) {
+                    console.log(response);
                     answerCtrl.downvoteClass(response,answer_uuid);
                 })
         }
@@ -569,7 +561,7 @@ angular.module('App')
 
         answerCtrl.downvoteClass = function(data,answer_uuid)
         {
-            if(data == 1)
+            if(data == 4)
             {
                 answerCtrl.downvoteStatusClass[answer_uuid] = 'green-font';
             }
@@ -582,7 +574,7 @@ angular.module('App')
 
         answerCtrl.upvoteClass = function(data,answer_uuid)
         {
-            if(data == 1)
+            if(data == 3)
             {
                 answerCtrl.upvoteStatusClass[answer_uuid] = 'green-font';
             }
@@ -590,6 +582,34 @@ angular.module('App')
             {
                 answerCtrl.upvoteStatusClass[answer_uuid] = '';
             }
+        }
+
+
+        //Comment on answer
+        answerCtrl.commentAnswer = function(answer_uuid)
+        {
+            $http.post('/commentAnswer',{
+                    topic: answer_uuid,
+                    body:  answerCtrl.answer_comment
+                })
+                .success(function(response){
+                    answerCtrl.answerReplyArr[answer_uuid] = response;
+                    answerCtrl.answer_comment = '';
+                })
+        }
+
+        /**
+         * Get the listing reply from answers
+         */
+        answerCtrl.fetchAnswerReply= function (answer_uuid)
+        {
+            $http.post('/answerReplyListing',{
+                    answer_uuid: answer_uuid
+                })
+                .success(function(response) {
+                    answerCtrl.answerReplyArr[answer_uuid] = response;
+                })
+
         }
 
         /**

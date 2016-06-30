@@ -37,9 +37,16 @@ class User extends Authenticatable
         return  DB::table('topics')->where('uid', $id)
                     ->join('channel', 'topics.channel', '=', 'channel.id')
                     ->join('users', 'topics.uid', '=', 'users.uuid')
+                    ->leftJoin('user_vote', function($join)use($id)
+                    {
+                        $join->on('topics.uuid', '=', 'user_vote.topic_uuid')
+                            ->where('user_vote.user_uuid', '=', $id );
+
+                    })
                     ->select('topics.*',
                              'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
-                             'channel.name as channel_name', 'channel.slug as channel_slug')
+                             'channel.name as channel_name', 'channel.slug as channel_slug',
+                             'user_vote.activity as voteActivity')
                     ->get();
     }
 

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Channel extends Model
@@ -19,12 +20,26 @@ class Channel extends Model
      */
     public function topics($id)
     {
+
+        $uid = '0';
+
+        if(Auth::user()){
+            $uid = Auth::user()->uuid;
+        }
+
         return  DB::table($this->topics_table)
                 ->join('channel', 'topics.channel', '=', 'channel.id')
                 ->join('users', 'topics.uid', '=', 'users.uuid')
+                ->leftJoin('user_vote', function($join)use($uid)
+                {
+                    $join->on('topics.uuid', '=', 'user_vote.topic_uuid')
+                        ->where('user_vote.user_uuid', '=', $uid );
+
+                })
                 ->select('topics.*',
                         'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
-                        'channel.name as channel_name', 'channel.slug as channel_slug')
+                        'channel.name as channel_name', 'channel.slug as channel_slug',
+                        'user_vote.activity as voteActivity')
                 ->where('topics.channel', $id)
                 ->orderBy('topics.views','DESC')
                 ->get();

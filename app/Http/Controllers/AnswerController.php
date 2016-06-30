@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
+use SEO;
 
 class AnswerController extends Controller
 {
@@ -82,13 +83,20 @@ class AnswerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id,Request $request)
     {
+
         $answer = new Answers();
         $answerDetail  = $answer->detail($id);
 
-
         if(!empty($answerDetail)) {
+
+            /* SEO */
+            SEO::setTitle($answerDetail->body .' - Qanya.com');
+            SEO::opengraph()->setUrl($request->url());
+            SEO::opengraph()->addProperty('type', 'articles');
+            /* END SEO */
+
 
             $answerComment = new AnswersComment();
             //Increment views for answers
@@ -145,6 +153,14 @@ class AnswerController extends Controller
     }
 
 
+    /**
+     * Reply listing for answers
+    */
+    public function replyListing(Request $request)
+    {
+        $answerComment = new AnswersComment();
+        return $answerComment->lists($request->answer_uuid);
+    }
 
     /**
      * Post comment answer
@@ -163,7 +179,11 @@ class AnswerController extends Controller
             $answer->user_uuid = Auth::user()->uuid;
             $answer->body = clean($request->body);
 
-            $answer->save();
+            if($answer->save())
+            {
+                $answerComment = new AnswersComment();
+                return $answerComment->lists($request->topic);
+            }
         }
         else
         {
@@ -207,7 +227,7 @@ class AnswerController extends Controller
 
                 $this->incrementVote($request,'upvote',3);
 
-                return 1;
+                return 3;
             }
 
         }
@@ -268,9 +288,10 @@ class AnswerController extends Controller
                 if($is_upvoted)
                     $this->resetVote($request,'upvote');
 
-                $this->incrementVote($request,'downvote',0);
+                $this->incrementVote($request,'downvote',4);
 
-                return 1;
+                //Should change this return later
+                return 4;
             }
 
         }

@@ -151,7 +151,7 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id,Request $request)
     {
         $topic = Cache::remember('answer_cache_'.$id,1,function() use ($id) {
             return  DB::table('topics')
@@ -178,11 +178,10 @@ class QuestionController extends Controller
         }else{
 
             /* SEO */
-            SEO::setTitle($topic->topic. ' Qanya');
+            SEO::setTitle($topic->topic. ' Qanya.com');
             SEO::setDescription($topic->topic);
-            SEO::opengraph()->setUrl('http://current.url.com');
+            SEO::opengraph()->setUrl($request->url());
             SEO::opengraph()->addProperty('type', 'articles');
-            SEO::twitter()->setSite('@LuizVinicius73');
             /* END SEO */
 
             $userExperts = null;

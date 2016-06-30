@@ -50,7 +50,12 @@
                                 </div>
 
                                 <div class="md-secondary">
-                                    <md-button class="md-raised">@{{ 'KEY_FOLLOW' | translate }}</md-button>
+                                    @if(Auth::user())
+                                        @if(Auth::user()->uuid != $answer->user_uuid)
+                                        <md-button class="md-raised">
+                                            @{{ 'KEY_FOLLOW' | translate }}</md-button>
+                                        @endif
+                                    @endif
                                 </div>
                             </md-list-item>
                         </md-list>
@@ -129,11 +134,11 @@
 
 
             {{-- COMMENT--}}
-            <div style="padding-top: 20px" class="md-padding" ng-controller="QuestionCtrl as questionCtrl" ng-cloak>
+            <div style="padding-top: 20px" ng-controller="AnswerCtrl as answerCtrl" ng-cloak>
 
                 <h1 class="md-title"> @{{ 'KEY_WRT_COMMENT' | translate }}</h1>
 
-                <md-content layout="column">
+                <md-content layout="column" layout-padding>
 
                     @if(Auth::user())
                     <md-list flex>
@@ -142,7 +147,7 @@
                                  class="md-avatar"
                                  alt="k" />
                             <div flex>
-                                <form ng-submit="questionCtrl.commentAnswer('{{ $answer->uuid }}')">
+                                <form ng-submit="answerCtrl.commentAnswer('{{ $answer->uuid }}')">
                                     <div class="md-list-item-text" layout="column">
                                         <h3>
                                             <a href="/profile/{{ $answer->displayname }}">
@@ -154,7 +159,7 @@
                                             <md-input-container class="md-block">
                                                 <label>@{{ 'KEY_WRT_ANSWER' | translate }}</label>
                                                 <textarea required
-                                                          ng-model="questionCtrl.answer_comment"
+                                                          ng-model="answerCtrl.answer_comment"
                                                           md-maxlength="1000" rows="5"></textarea>
                                             </md-input-container>
                                         </h4>
@@ -162,7 +167,7 @@
 
                                     <div  layout="row"
                                           layout-align="end center">
-                                        <md-button ng-if="questionCtrl.answer_comment"
+                                        <md-button ng-if="answerCtrl.answer_comment"
                                                     type="submit"
                                                     class="md-raised md-hue-1 md-mini">
                                                     @{{ 'KEY_POST' | translate }}</md-button>
@@ -181,34 +186,36 @@
 
                     {{-- Comment listing --}}
                     <h1 class="md-title"> @{{ 'KEY_COMMENTS' | translate }}</h1>
-                    <md-list flex>
-                        @foreach($comments as $comment)
-                            <md-list-item class="md-3-line md-long-text">
-                                <img src="https://scontent.fbkk8-1.fna.fbcdn.net/v/t1.0-1/p160x160/3768_10156694116535179_601632126662207422_n.jpg?oh=6da6cc0c3a2381aa4cff9a7a8e246547&oe=57C31D82"
-                                     class="md-avatar"
-                                     alt="k" />
-                                <div layout="row" flex>
-                                    <div class="md-list-item-text">
-                                        <p>
-                                            <div class="listing-article">
-                                                {{ strip_tags($comment->body) }}
-                                            </div>
-                                        </p>
 
-                                        <h4>
-                                            <a href="/profile/{{ $comment->displayname }}">
-                                                {{ $comment->firstname }} {{ $comment->lastname }}
-                                            </a>
-                                        </h4>
-
-                                        <p>
-                                            {!! \Carbon\Carbon::parse($comment->created_at)->diffForHumans() !!}
-                                        </p>
+                    <md-list ng-init="answerCtrl.fetchAnswerReply({{$answer->uuid}})">
+                        <md-list-item class="md-3-line md-long-text"
+                                      ng-repeat="reply in answerCtrl.answerReplyArr[{{$answer->uuid}}]">
+                            {{--@{{ reply }}--}}
+                            <img src="@{{reply.avatar}}"
+                                 class="md-avatar"
+                                 alt="k" />
+                            <div layout="row" flex>
+                                <div class="md-list-item-text">
+                                    <p>
+                                    <div class="listing-article">
+                                        @{{ reply.body | htmlToPlaintext }}
                                     </div>
+                                    </p>
+
+                                    <h4>
+                                        <a href="/profile/@{{ reply.displayname }}">
+                                            @{{ reply.firstname }}
+                                        </a>
+                                    </h4>
+
+                                    <p>
+                                        @{{ reply.created_at }}
+                                    </p>
                                 </div>
-                            </md-list-item>
-                        @endforeach
+                            </div>
+                        </md-list-item>
                     </md-list>
+
                     {{-- End comment--}}
 
                 </md-content>
