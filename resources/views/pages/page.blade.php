@@ -207,6 +207,28 @@
                     {{--{{ print_r($answer) }}--}}
 
                     <md-list-item class="md-3-line md-padding">
+                        <div layout="column" layout-align="start center" >
+
+                            <md-button aria-label="@{{ 'KEY_UPVOTE' | translate }}">
+                                <md-icon>
+                                    <i  class="material-icons md-36">expand_less</i>
+                                </md-icon>
+                            </md-button>
+
+                            {{-- TALLY --}}
+                            <span
+                                    class="md-headline"
+                                    layout-align="center center">
+                                10
+                            </span>
+
+                            <md-button>
+                                <md-icon>
+                                    <i class="material-icons md-36">expand_more</i>
+                                </md-icon>
+                            </md-button>
+
+                        </div>
                         <img ng-src="{{ $answer->avatar }}" class="md-avatar" alt="user" />
                         <div class="md-list-item-text">
                             <b class="md-caption">@{{ 'KEY_COMMENTS_NUM' | translate }} {{ $key + 1 }} </b>

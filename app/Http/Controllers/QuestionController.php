@@ -15,6 +15,7 @@ use App\Channel;
 use App\Topics;
 use App\Tags;
 use Illuminate\Support\Facades\Cache;
+use Redis;
 use Illuminate\Support\Facades\DB;
 
 
@@ -24,6 +25,8 @@ use OpenGraph;
 use Twitter;
 ## or
 use SEO;
+
+
 
 class QuestionController extends Controller
 {
@@ -153,7 +156,7 @@ class QuestionController extends Controller
      */
     public function show($id,Request $request)
     {
-        $topic = Cache::remember('answer_cache_'.$id,1,function() use ($id) {
+        $topic = Cache::remember('question_cache_'.$id,1,function() use ($id) {
             return  DB::table('topics')
                     ->join('channel', 'topics.channel', '=', 'channel.id')
                     ->select('topics.*', 'channel.name as channel_name', 'channel.slug as channel_slug')
@@ -161,13 +164,14 @@ class QuestionController extends Controller
                     ->first();
         });
 
-        $similar_topics =
-                DB::table('topics')
-                ->join('channel','topics.channel','=','channel.id')
-                ->select('topics.*','channel.name as channel_name','channel.slug as channel_slug')
-                ->where('topics.channel',$topic->channel)
-                ->take(15)
+        $similar_topics = Cache::remember('similar_question_cache_'.$id,1,function() use ($topic) {
+           return  DB::table('topics')
+                ->join('channel', 'topics.channel', '=', 'channel.id')
+                ->select('topics.*', 'channel.name as channel_name', 'channel.slug as channel_slug')
+                ->where('topics.channel', $topic->channel)
+                ->take(10)
                 ->get();
+        });
 
         $tags = new Tags();
         $tagsChannel = $tags->trendingTagsChannel($topic->channel);
@@ -191,8 +195,6 @@ class QuestionController extends Controller
             {
                 $expert = new Experts();
                 $userExperts = $expert->userExpertise(Auth::user()->uuid,99);
-//                $userExperts = Experts::where('user_uuid',Auth::user()->uuid)->get();
-
             }
 
             //Incrementing views, will use REDIS later

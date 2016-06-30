@@ -6,21 +6,12 @@ FOR: UPVOTE, DOWNVOTE, GO TO LANDING ANSWER LANDING PAGE
 
 --}}
 
-<div layout="row" ng-controller="AnswerCtrl as answerCtrl">
+<div layout="row" layout-align="start center" ng-controller="AnswerCtrl as answerCtrl">
 
 {{--    {{ print_r($answer) }}--}}
-    <span layout-align="center" layout="row">
-        <md-icon ng-class="answerCtrl.upvoteStatusClass[{{ $answer->uuid }}]" layout-align="center">
-            <i class="material-icons md-14">thumb_up</i>
-        </md-icon>
-
-                {{ $answer->upvote }}
-         {{--@{{ 'KEY_UPVOTE' | translate  }}--}}
-            </span>
 
     {{-- UPVOTE --}}
-    <md-button layout="row"
-            ng-init="answerCtrl.upvoteClass('{{$answer->voteActivity}}',{{$answer->uuid}})"
+    <md-button ng-init="answerCtrl.upvoteClass('{{$answer->voteActivity}}',{{$answer->uuid}})"
 
             {{-- what button should do when click--}}
             @if(Auth::user())
@@ -32,21 +23,20 @@ FOR: UPVOTE, DOWNVOTE, GO TO LANDING ANSWER LANDING PAGE
 
             ng-class="answerCtrl.upvoteStatusClass[{{ $answer->uuid }}]">
 
-            <md-icon ng-class="answerCtrl.upvoteStatusClass[{{ $answer->uuid }}]" layout-align="center">
-                 <i class="material-icons md-14">thumb_up</i>
+            <md-icon ng-class="answerCtrl.upvoteStatusClass[{{ $answer->uuid }}]" flex>
+                 <i class="material-icons md-18">thumb_up</i>
             </md-icon>
 
-
-            <span layout-align="center" layout="row">
+            <span>
                 {{ $answer->upvote }}
-                {{--@{{ 'KEY_UPVOTE' | translate  }}--}}
             </span>
+            {{--@{{ 'KEY_UPVOTE' | translate  }}--}}
+
     </md-button>
 
 
     {{-- DOWNVOTE --}}
-    <md-button layout="row"
-            ng-init="answerCtrl.downvoteClass('{{$answer->voteActivity}}',{{$answer->uuid}})"
+    <md-button ng-init="answerCtrl.downvoteClass('{{$answer->voteActivity}}',{{$answer->uuid}})"
 
             {{-- what button should do when click--}}
             @if(Auth::user())
@@ -58,21 +48,21 @@ FOR: UPVOTE, DOWNVOTE, GO TO LANDING ANSWER LANDING PAGE
 
             ng-class="answerCtrl.downvoteStatusClass[{{ $answer->uuid }}]">
 
-        <md-icon
-                ng-class="answerCtrl.downvoteStatusClass[{{ $answer->uuid }}]">
-            <i class="material-icons md-14">thumb_down</i>
+        <md-icon ng-class="answerCtrl.downvoteStatusClass[{{ $answer->uuid }}]">
+            <i class="material-icons md-18">thumb_down</i>
         </md-icon>
 
-         <span layout-align="center" layout="row">
+         <span>
                 {{ $answer->downvote }}
              {{--@{{ 'KEY_UPVOTE' | translate  }}--}}
             </span>
 {{--        @{{ 'KEY_DWN_VOTE' | translate  }}--}}
     </md-button>
 
+
     <md-button ng-href="/answer/{{ $answer->uuid }}" class="md-subhead md-mini">
         <md-icon>
-            <i class="material-icons md-14">question_answer</i>
+            <i class="material-icons md-18">question_answer</i>
         </md-icon>
         @{{ 'KEY_TALKBOUT_ANS' | translate }}
     </md-button>
