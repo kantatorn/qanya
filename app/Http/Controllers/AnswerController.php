@@ -179,6 +179,9 @@ class AnswerController extends Controller
             $answer->user_uuid = Auth::user()->uuid;
             $answer->body = clean($request->body);
 
+            //When there is new replies increment tally for comments on answer
+            DB::table('topics_answers')->where('uuid' , $request->topic)->increment("replies_count");
+
             if($answer->save())
             {
                 $answerComment = new AnswersComment();

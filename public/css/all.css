@@ -427,9 +427,18 @@ body {
     /*margin-top:65px;*/
     background-color:   #FAFAFA;
     /*height:100%;*/
-    color: #272727;
+    color: #111;
     overflow:hidden;
 }
+
+
+.contentRead p {
+    font-family: sans-serif,'Kanit','Lato' ;
+    display: block;
+    margin: 1.6em 0;
+    line-height: 1.5em;
+}
+
 .hand{
     cursor: text;
 }
@@ -439,6 +448,14 @@ body {
 .white-font{
     color: whitesmoke;
 }
+
+.gray-font{
+    color: #777777;
+}
+.gray-font-1{
+    color: #666;
+}
+
 .purple{
     background-color: #4D394B;
 }
@@ -446,12 +463,13 @@ body {
     color:#4D394B;
 }
 
-.green-font-1{
-    color: #00ab6b;
-}
 .green-font{
     color:#5DB09D;
 }
+.green-font-1{
+    color: #00ab6b;
+}
+
 .editBorder{
     border-style: dotted;
     border-color: #5DB09D;

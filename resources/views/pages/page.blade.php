@@ -35,9 +35,11 @@
                         {{  strip_tags ($topic->topic) }}
                     </h1>
 
-                    <p class="md-body-1">
-                        {!!  clean($topic->text)  !!}
-                    </p>
+                    <div class="contentRead">
+                        <p class="gray-font">
+                            {!!  clean($topic->text)  !!}
+                        </p>
+                    </div>
 
                 </div>
 
@@ -196,9 +198,8 @@
 
 
             {{-- ANSWERS SECTION --}}
-            <md-content class="md-padding">
 
-                <h1 class="md-title">
+                <h1 class="md-title" layout-padding="">
                    {{ count($answers) }} @{{ 'KEY_ANSWER' | translate }}
                 </h1>
 
@@ -206,31 +207,94 @@
 
                     {{--{{ print_r($answer) }}--}}
 
-                    <md-list-item class="md-3-line md-padding">
-                        <div layout="column" layout-align="start center" >
+                    <md-card>
 
-                            <md-button aria-label="@{{ 'KEY_UPVOTE' | translate }}">
-                                <md-icon>
-                                    <i  class="material-icons md-36">expand_less</i>
-                                </md-icon>
-                            </md-button>
+                        <md-card-header>
+                            <md-card-avatar>
+                                <img class="md-user-avatar" ng-src="{{ $answer->avatar }}"/>
+                            </md-card-avatar>
+                            <md-card-header-text>
+                                <b class="md-caption">@{{ 'KEY_COMMENTS_NUM' | translate }} {{ $key + 1 }} </b>
+                                <span class="md-title">
+                                    <a href="/profile/{{ $answer->displayname }}">
+                                        {{ $answer->firstname }} {{ $answer->lastname }}
+                                    </a>
+                                    ·
+                                     <span class="md-caption">
+                                        {!! \Carbon\Carbon::parse($answer->created_at)->diffForHumans() !!}
+                                    </span>
+                                </span>
+                                @if($answer->expert_title)
 
-                            {{-- TALLY --}}
-                            <span
-                                    class="md-headline"
-                                    layout-align="center center">
-                                10
-                            </span>
+                                    <span class="md-subhead">
+                                    <a href="/tag/{{ strip_tags($answer->expert_title) }}">
+                                        <b>
+                                            #{{ strip_tags($answer->expert_title) }}
+                                            ( {{$answer->expert_endorsed}} )
+                                        </b>
+                                    </a>
+                                    <i>·{{ strip_tags($answer->expert_text) }}</i>
 
-                            <md-button>
-                                <md-icon>
-                                    <i class="material-icons md-36">expand_more</i>
-                                </md-icon>
-                            </md-button>
+                                    </span>
 
-                        </div>
+                                @endif
+
+                            </md-card-header-text>
+
+                            <md-menu ng-controller="UserCtrl as userCtrl">
+                                <md-button class="md-icon-button md-secondary" aria-label="More"
+                                           ng-click="userCtrl.openMenu($mdOpenMenu, $event)">
+                                    <i class="material-icons md-14">more_vert</i>
+                                </md-button>
+                                <md-menu-content width="4">
+                                    <md-menu-item>REPORT</md-menu-item>
+                                    <md-menu-item>
+                                        <md-button>
+                                            เป็นแสปม
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button>
+                                            มีเนื้อหาก้าวร้าวหรือให้ร้าย
+                                        </md-button>
+                                    </md-menu-item>
+
+                                    <md-menu-item>
+                                        <md-button>
+                                            Other
+                                        </md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </md-card-header>
+
+                        {{--<md-card-title>
+                            <md-card-title-text>
+                                <span class="md-headline">In-card mixed actions</span>
+                                <span class="md-subhead">Reversed</span>
+                            </md-card-title-text>
+                        </md-card-title>--}}
+
+                        <md-card-content>
+
+                            {!! clean($answer->body) !!}
+
+                        </md-card-content>
+
+                        {{-- ANSWER ACTIONABLE BUTTONS --}}
+                        @include('layouts.answer_action_btn',['answer' => $answer])
+
+
+
+                    </md-card>
+
+
+                    {{--<md-list-item class="md-3-line md-padding">
+
                         <img ng-src="{{ $answer->avatar }}" class="md-avatar" alt="user" />
-                        <div class="md-list-item-text">
+
+                        <div class="md-list-item-text" flex>
                             <b class="md-caption">@{{ 'KEY_COMMENTS_NUM' | translate }} {{ $key + 1 }} </b>
                             <h3>
                                 <span class="md-caption">
@@ -238,41 +302,47 @@
                                         {{ $answer->firstname }} {{ $answer->lastname }}
                                     </a>
                                 </span>
-                            </h3>
 
-                            <p>
-
-                                <span class="md-caption">
-                                    @{{ 'KEY_VIEW' | translate }} {{ $answer->views }}
-                                    ·
-                                    <b>{{ strip_tags($answer->expert_title) }}</b>
-                                    <i>{{ strip_tags($answer->expert_text) }}</i>
-
-                                </span>
                                 ·
-                                <span class="md-caption">
+
+                                 <span class="md-caption">
                                     {!! \Carbon\Carbon::parse($answer->created_at)->diffForHumans() !!}
                                 </span>
+                            </h3>
 
-                            </p>
+                            @if($answer->expert_title)
+                            <p>
+                                <span class="md-caption">
+                                    <a href="/tag/{{ strip_tags($answer->expert_title) }}">
+                                        <b>
+                                            #{{ strip_tags($answer->expert_title) }}
+                                            ( {{$answer->expert_endorsed}} )
+                                        </b>
+                                    </a>
+                                    <i>-{{ strip_tags($answer->expert_text) }}</i>
 
-                            <p style="padding-top:15px">
-                                <span class="md-headline">
-                                {!! clean($answer->body) !!}
                                 </span>
                             </p>
+                            @endif
 
+                            <div class="contentRead">
+                                <p style="padding-top:15px">
+                                    --}}{{--<span class="md-headline">--}}{{--
+                                    {!! clean($answer->body) !!}
+                                    --}}{{--</span>--}}{{--
+                                </p>
+                            </div>
 
-                            {{-- ANSWER ACTIONABLE BUTTONS --}}
+                            --}}{{-- ANSWER ACTIONABLE BUTTONS --}}{{--
                             @include('layouts.answer_action_btn',['answer' => $answer])
 
                         </div>
                     </md-list-item>
 
-                    <md-divider></md-divider>
+                    <md-divider></md-divider>--}}
 
                 @endforeach
-            <md-content>
+
         </div>
 
         {{-- RIGHT SIDE --}}
@@ -317,7 +387,7 @@
                         <md-list-item>
                             <div class="md-list-item-text" layout="column">
                                 <p class="md-body-1">
-                                    <a href="/tag/{{ $tag->title }}">
+                                    <a href="/tag/{{ strip_tags($tag->title) }}">
                                         #{{ strip_tags($tag->title) }}
                                     </a>
                                 </p>

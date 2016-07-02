@@ -5,6 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <meta http-equiv="Cache-control" content="public">
+    <meta http-equiv="Cache-Control" content="max-age=120"/>
+
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" content="">
+
     <title>Qanya?</title>
 
     {{-- SEO STUFF --}}

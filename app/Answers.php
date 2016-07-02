@@ -113,7 +113,7 @@ class Answers extends Model
             ->where('topics_answers.topic_uuid',$id)
             ->select('topics_answers.*',
                 'users.firstname','users.lastname','users.displayname','users.followers','users.avatar',
-                'experts.title as expert_title', 'experts.text as expert_text',
+                'experts.title as expert_title', 'experts.text as expert_text','experts.endorsed as expert_endorsed',
                 'topics.topic','topics.uuid as topic_uuid',
                 'user_vote.activity as voteActivity',
                 DB::raw('case when user_vote.user_uuid is null then 0 else 1 end as isVoted'))
