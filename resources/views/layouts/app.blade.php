@@ -50,7 +50,6 @@
         </script>
     @endif
 
-    <script src="{{ elixir('js/all.js') }}"></script>
     <link href="{{ elixir('css/all.css') }}" rel="stylesheet">
 
 </head>
@@ -224,6 +223,6 @@
 
 </div>
 
-
+    <script src="{{ elixir('js/all.js') }}" data-cfasync='true'></script>
 </body>
 </html>

@@ -52,11 +52,12 @@
                 <p class="md-caption">
                     © 2016 Qanya
                     <br>
-                    เกี่ยวกับเรา: แคนญา ตั้งเป้าไว้ว่าจะเป็นเวปรวมความรู้ ผู้รู้ และแชร์ประสบการ
+                        <a href="https://qanya.com/answer/1467475643">เกี่ยวกับเรา</a>
                     <br>
-                    ข้อตกลงในการใช้:
+                    <a href="https://qanya.com/question/1467190947">ข้อตกลงในการใช้</a>
                     <br>
-                    ติดต่อ: admin@qanya.com
+                    <a href="mailto:admin@qanya.com?Subject=Hello%20Qanya" target="_top">
+                    ติดต่อ: </a>
                 </p>
             </md-content>
         </div>
